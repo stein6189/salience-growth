@@ -16,14 +16,21 @@ const questions = fc.questions as FcQuestion[];
       <p class="lead reveal">{fc.subtitle}</p>
     </div>
 
-    <div class="fc-widget reveal" id="fc-widget">
+    <div
+      class="fc-widget reveal"
+      id="fc-widget"
+      data-progress-label={fc.progressLabel}
+      data-progress-of={fc.progressOf}
+      data-label-next={fc.next}
+      data-label-see-result={fc.seeResult}
+    >
       <div class="fc-inner">
         <!-- Progress -->
         <div class="fc-progress-wrap" id="fc-progress-wrap">
-          <div class="fc-progress-bar" id="fc-progress-bar" style="width:20%"></div>
+          <div class="fc-progress-bar" id="fc-progress-bar" style={`width:${(1 / questions.length) * 100}%`}></div>
         </div>
         <p class="fc-progress-label" id="fc-progress-label">
-          {fc.progressLabel} 1 {fc.progressOf} {questions.length}
+          {fc.progressLabel} <strong>1</strong> {fc.progressOf} {questions.length}
         </p>
 
         <!-- Questions -->
@@ -32,9 +39,10 @@ const questions = fc.questions as FcQuestion[];
             <div class="fc-step" data-q={qi} data-dimension={q.weakDimension} style={qi === 0 ? '' : 'display:none'}>
               <p class="fc-qtext">{q.text}</p>
               <div class="fc-opts">
-                {q.options.map((opt) => (
+                {q.options.map((opt, oi) => (
                   <button
                     class="fc-opt"
+                    data-opt={oi}
                     data-score={opt.score}
                     data-disqualifier={opt.disqualifier ? 'true' : ''}
                   >
@@ -44,6 +52,16 @@ const questions = fc.questions as FcQuestion[];
               </div>
             </div>
           ))}
+
+          <!-- Navigation -->
+          <div class="fc-nav" id="fc-nav">
+            <button type="button" class="fc-back" id="fc-back" style="visibility:hidden">
+              <span aria-hidden="true">←</span> {fc.back}
+            </button>
+            <button type="button" class="fc-next" id="fc-next" style="display:none">
+              {fc.next} <span aria-hidden="true">→</span>
+            </button>
+          </div>
         </div>
 
         <!-- Results (hidden until complete) -->
@@ -122,65 +140,92 @@ const questions = fc.questions as FcQuestion[];
 <script>
   const widget = document.getElementById('fc-widget');
   if (widget) {
-    const totalQ = widget.querySelectorAll('.fc-step').length;
-    const answers: { score: number; disqualifier: boolean; dimension: string }[] = [];
+    type Answer = { optIdx: number; score: number; disqualifier: boolean; dimension: string };
+    const steps = [...widget.querySelectorAll<HTMLElement>('.fc-step')];
+    const totalQ = steps.length;
+    const answers: (Answer | undefined)[] = new Array(totalQ);
+    let current = 0;
 
-    function updateProgress(step: number) {
-      const bar = document.getElementById('fc-progress-bar') as HTMLElement | null;
-      const label = document.getElementById('fc-progress-label') as HTMLElement | null;
-      if (bar) bar.style.width = `${(step / totalQ) * 100}%`;
-      if (label) {
-        const raw = label.textContent ?? '';
-        const parts = raw.trim().split(/\s+/);
-        const ofIdx = parts.findIndex((p) => !isNaN(parseInt(p)) && parseInt(p) === (step - 1));
-        parts[ofIdx >= 0 ? ofIdx : parts.length - 3] = String(step);
-        label.textContent = parts.join(' ');
-        const nums = label.querySelectorAll<HTMLElement>('');
-        void nums;
-        label.innerHTML = label.textContent
-          .replace(/\d+/, `<strong>${step}</strong>`);
+    const progressBar = document.getElementById('fc-progress-bar') as HTMLElement | null;
+    const progressLabel = document.getElementById('fc-progress-label');
+    const progressWrap = document.getElementById('fc-progress-wrap');
+    const backBtn = document.getElementById('fc-back') as HTMLButtonElement | null;
+    const nextBtn = document.getElementById('fc-next') as HTMLButtonElement | null;
+    const questionsEl = document.getElementById('fc-questions');
+    const resultEl = document.getElementById('fc-result');
+
+    const labelTpl = widget.dataset.progressLabel || 'Question';
+    const ofTpl = widget.dataset.progressOf || 'of';
+    const nextLabel = widget.dataset.labelNext || 'Next';
+    const seeResultLabel = widget.dataset.labelSeeResult || 'See result';
+
+    function render() {
+      steps.forEach((s, i) => { s.style.display = i === current ? '' : 'none'; });
+      if (progressBar) progressBar.style.width = `${((current + 1) / totalQ) * 100}%`;
+      if (progressLabel) progressLabel.innerHTML = `${labelTpl} <strong>${current + 1}</strong> ${ofTpl} ${totalQ}`;
+
+      if (backBtn) backBtn.style.visibility = current > 0 ? 'visible' : 'hidden';
+
+      const answered = answers[current] !== undefined;
+      if (nextBtn) {
+        if (answered) {
+          nextBtn.style.display = '';
+          const isLast = current === totalQ - 1;
+          nextBtn.innerHTML = isLast
+            ? `${seeResultLabel} <span aria-hidden="true">→</span>`
+            : `${nextLabel} <span aria-hidden="true">→</span>`;
+        } else {
+          nextBtn.style.display = 'none';
+        }
       }
+
+      const sel = answers[current];
+      steps[current].querySelectorAll('.fc-opt').forEach((b) => {
+        const oi = parseInt((b as HTMLElement).dataset.opt ?? '-1');
+        b.classList.toggle('selected', !!sel && sel.optIdx === oi);
+      });
     }
 
-    widget.querySelectorAll<HTMLButtonElement>('.fc-opt').forEach((btn) => {
-      btn.addEventListener('click', () => {
-        const step = btn.closest<HTMLElement>('.fc-step');
-        if (!step) return;
-        const qi = parseInt(step.dataset.q ?? '0');
-        const score = parseInt(btn.dataset.score ?? '0');
-        const disqualifier = btn.dataset.disqualifier === 'true';
-        const dimension = step.dataset.dimension ?? '';
+    function advance() {
+      if (current < totalQ - 1) { current++; render(); }
+      else { showResult(); }
+    }
 
-        answers[qi] = { score, disqualifier, dimension };
-
-        step.querySelectorAll('.fc-opt').forEach((b) => b.classList.remove('selected'));
-        btn.classList.add('selected');
-
-        setTimeout(() => {
-          if (qi < totalQ - 1) {
-            step.style.display = 'none';
-            const next = widget.querySelector<HTMLElement>(`.fc-step[data-q="${qi + 1}"]`);
-            if (next) next.style.display = '';
-            updateProgress(qi + 2);
+    steps.forEach((step) => {
+      const qi = parseInt(step.dataset.q ?? '0');
+      step.querySelectorAll<HTMLButtonElement>('.fc-opt').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const wasAnswered = answers[qi] !== undefined;
+          answers[qi] = {
+            optIdx: parseInt(btn.dataset.opt ?? '-1'),
+            score: parseInt(btn.dataset.score ?? '0'),
+            disqualifier: btn.dataset.disqualifier === 'true',
+            dimension: step.dataset.dimension ?? '',
+          };
+          step.querySelectorAll('.fc-opt').forEach((b) => b.classList.remove('selected'));
+          btn.classList.add('selected');
+          if (!wasAnswered) {
+            // First answer to this question: auto-advance for a snappy first pass.
+            setTimeout(advance, 200);
           } else {
-            showResult();
+            // Reviewing or changing an earlier answer: stay put, just refresh controls.
+            render();
           }
-        }, 220);
+        });
       });
     });
 
+    backBtn?.addEventListener('click', () => { if (current > 0) { current--; render(); } });
+    nextBtn?.addEventListener('click', advance);
+
     function showResult() {
-      const questionsEl = document.getElementById('fc-questions');
-      const resultEl = document.getElementById('fc-result');
-      const progressWrap = document.getElementById('fc-progress-wrap');
-      const progressLabel = document.getElementById('fc-progress-label');
       if (questionsEl) questionsEl.style.display = 'none';
       if (progressWrap) progressWrap.style.display = 'none';
       if (progressLabel) progressLabel.style.display = 'none';
       if (resultEl) resultEl.style.display = '';
 
-      const total = answers.reduce((s, a) => s + a.score, 0);
-      const hasDisqualifier = answers.some((a) => a.disqualifier);
+      const total = answers.reduce((s, a) => s + (a ? a.score : 0), 0);
+      const hasDisqualifier = answers.some((a) => a && a.disqualifier);
 
       let resultId: string;
       if (hasDisqualifier || total <= 3) {
@@ -189,9 +234,10 @@ const questions = fc.questions as FcQuestion[];
         resultId = 'fc-r-strong';
       } else {
         resultId = 'fc-r-partial';
-        const weakest = answers.reduce((min, a) => (a.score < min.score ? a : min), answers[0]);
+        const answered = answers.filter((a): a is Answer => !!a);
+        const weakest = answered.reduce((min, a) => (a.score < min.score ? a : min), answered[0]);
         const dimEl = document.getElementById('fc-dim');
-        if (dimEl && weakest.dimension) dimEl.textContent = weakest.dimension;
+        if (dimEl && weakest && weakest.dimension) dimEl.textContent = weakest.dimension;
       }
 
       const resultPane = document.getElementById(resultId);
@@ -199,30 +245,29 @@ const questions = fc.questions as FcQuestion[];
     }
 
     document.getElementById('fc-retake')?.addEventListener('click', () => {
-      answers.length = 0;
+      for (let i = 0; i < answers.length; i++) answers[i] = undefined;
+      current = 0;
       widget.querySelectorAll<HTMLButtonElement>('.fc-opt').forEach((b) => b.classList.remove('selected'));
-      widget.querySelectorAll<HTMLElement>('.fc-step').forEach((s, i) => {
-        s.style.display = i === 0 ? '' : 'none';
-      });
       widget.querySelectorAll<HTMLElement>('.fc-r').forEach((r) => { r.style.display = 'none'; });
-      const questionsEl = document.getElementById('fc-questions');
-      const resultEl = document.getElementById('fc-result');
-      const progressWrap = document.getElementById('fc-progress-wrap');
-      const progressLabel = document.getElementById('fc-progress-label');
-      if (questionsEl) questionsEl.style.display = '';
       if (resultEl) resultEl.style.display = 'none';
+      if (questionsEl) questionsEl.style.display = '';
       if (progressWrap) progressWrap.style.display = '';
       if (progressLabel) progressLabel.style.display = '';
-      const bar = document.getElementById('fc-progress-bar') as HTMLElement | null;
-      if (bar) bar.style.width = `${(1 / totalQ) * 100}%`;
+      render();
     });
 
     const emailForm = document.getElementById('fc-email-form') as HTMLFormElement | null;
     emailForm?.addEventListener('submit', async (e) => {
       e.preventDefault();
       const data = new FormData(emailForm);
+      const body = new URLSearchParams();
+      data.forEach((value, key) => body.append(key, value.toString()));
       try {
-        await fetch('/', { method: 'POST', body: data });
+        await fetch('/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: body.toString(),
+        });
         emailForm.style.display = 'none';
         const success = document.getElementById('fc-success');
         if (success) success.style.display = '';
@@ -230,6 +275,8 @@ const questions = fc.questions as FcQuestion[];
         emailForm.submit();
       }
     });
+
+    render();
   }
 </script>
 
@@ -310,6 +357,32 @@ const questions = fc.questions as FcQuestion[];
     border-color: var(--accent);
     color: var(--ink);
   }
+
+  /* Navigation */
+  .fc-nav {
+    margin-top: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  .fc-back, .fc-next {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: var(--font-sans);
+    font-size: 0.9rem;
+    font-weight: 600;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.4rem 0;
+    transition: color 0.1s var(--ease);
+  }
+  .fc-back { color: var(--muted); }
+  .fc-back:hover { color: var(--ink); }
+  .fc-next { color: var(--accent-ink); margin-left: auto; }
+  .fc-next:hover { color: var(--accent); }
 
   /* Result */
   .fc-r { padding-top: 0.25rem; }

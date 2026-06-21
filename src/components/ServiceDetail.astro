@@ -1,0 +1,267 @@
+---
+import { getContent, type Lang } from '../data/site';
+
+interface Props {
+  lang?: Lang;
+  slug: string;
+}
+const { lang = 'en', slug } = Astro.props;
+const c = getContent(lang);
+const ui = c.serviceUi;
+const items = c.services.items;
+const service = items.find((s) => s.slug === slug)!;
+const others = items.filter((s) => s.slug !== slug);
+const d = service.detail;
+---
+
+<section class="section service-detail">
+  <div class="container">
+    <a href={ui.homeHref + '#services'} class="back-link">{ui.backToServices}</a>
+
+    <header class="sd-head">
+      <p class="eyebrow">{ui.eyebrow}</p>
+      <h1>{service.title}</h1>
+      <p class="sd-tagline">{d.tagline}</p>
+      <span class="sd-duration"><span class="dl">{ui.durationLabel}:</span> {service.duration}</span>
+    </header>
+
+    <div class="sd-grid">
+      <div class="sd-main">
+        <p class="sd-overview">{d.overview}</p>
+
+        <h2 class="sd-sub">{ui.includedTitle}</h2>
+        <ul class="sd-list">
+          {d.includes.map((item) => (
+            <li>{item}</li>
+          ))}
+        </ul>
+      </div>
+
+      <aside class="sd-aside">
+        <div class="sd-card">
+          <h3>{ui.outcomeTitle}</h3>
+          <p>{d.outcome}</p>
+        </div>
+        <div class="sd-card">
+          <h3>{ui.idealForTitle}</h3>
+          <p>{d.idealFor}</p>
+        </div>
+      </aside>
+    </div>
+
+    <div class="sd-cta">
+      <div class="sd-cta-text">
+        <h2>{ui.ctaTitle}</h2>
+        <p>{ui.ctaBody}</p>
+      </div>
+      <a class="btn btn-primary" href={ui.ctaHref}>{ui.ctaButton}</a>
+    </div>
+
+    <div class="sd-other">
+      <h2 class="sd-other-title">{ui.otherTitle}</h2>
+      <div class="sd-other-grid">
+        {others.map((s) => (
+          <a class="sd-other-card" href={ui.servicesBase + '/' + s.slug + '/'}>
+            <span class="sd-other-name">{s.title}</span>
+            <span class="sd-other-body">{s.detail.tagline}</span>
+            <span class="sd-other-arrow" aria-hidden="true">→</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-weight: 600;
+    font-size: 0.92rem;
+    color: var(--muted);
+    margin-bottom: 2rem;
+    transition: color 0.1s var(--ease);
+  }
+  .back-link:hover { color: var(--ink); }
+
+  .sd-head {
+    max-width: 60ch;
+    padding-bottom: clamp(2rem, 4vw, 3rem);
+    border-bottom: 1px solid var(--line);
+  }
+  .sd-head h1 {
+    font-size: clamp(2.1rem, 5vw, 3.2rem);
+    margin-top: 0.8rem;
+  }
+  .sd-tagline {
+    margin-top: 1.1rem;
+    font-family: var(--font-serif);
+    font-size: clamp(1.25rem, 2.6vw, 1.7rem);
+    line-height: 1.35;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+  }
+  .sd-duration {
+    display: inline-block;
+    margin-top: 1.4rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--accent-ink);
+    background: var(--accent-soft);
+    padding: 0.3rem 0.7rem;
+    border-radius: 999px;
+  }
+  .sd-duration .dl { opacity: 0.7; }
+
+  .sd-grid {
+    margin-top: clamp(2rem, 4vw, 3rem);
+    display: grid;
+    grid-template-columns: 1.6fr 1fr;
+    gap: clamp(2rem, 4vw, 3.5rem);
+    align-items: start;
+  }
+  .sd-overview {
+    font-size: clamp(1.05rem, 1.7vw, 1.2rem);
+    line-height: 1.6;
+    color: var(--muted);
+  }
+  .sd-sub {
+    margin-top: 2.25rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+  .sd-list {
+    margin-top: 1.1rem;
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: 0.75rem;
+  }
+  .sd-list li {
+    position: relative;
+    padding-left: 1.6rem;
+    color: var(--ink);
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+  .sd-list li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.55em;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 0 4px var(--accent-soft);
+  }
+
+  .sd-aside {
+    display: grid;
+    gap: 1.1rem;
+    position: sticky;
+    top: 96px;
+  }
+  .sd-card {
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 1.4rem;
+  }
+  .sd-card h3 {
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent-ink);
+  }
+  .sd-card p {
+    margin-top: 0.6rem;
+    color: var(--ink);
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+
+  .sd-cta {
+    margin-top: clamp(3rem, 6vw, 4.5rem);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    padding: clamp(1.75rem, 3.5vw, 2.5rem);
+    border-radius: var(--radius);
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .sd-cta h2 { font-size: clamp(1.3rem, 2.4vw, 1.7rem); color: var(--paper); }
+  .sd-cta p {
+    margin-top: 0.5rem;
+    color: rgba(251, 249, 244, 0.75);
+    max-width: 50ch;
+  }
+
+  .sd-other {
+    margin-top: clamp(3rem, 6vw, 4.5rem);
+  }
+  .sd-other-title {
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .sd-other-grid {
+    margin-top: 1.25rem;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.1rem;
+  }
+  .sd-other-card {
+    position: relative;
+    display: block;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 1.4rem;
+    transition: border-color 0.2s var(--ease), transform 0.2s var(--ease), box-shadow 0.2s var(--ease);
+  }
+  .sd-other-card:hover {
+    border-color: var(--ink);
+    transform: translateY(-4px);
+    box-shadow: 0 18px 40px -24px rgba(22, 24, 29, 0.4);
+  }
+  .sd-other-name {
+    display: block;
+    font-weight: 600;
+    font-size: 1.05rem;
+    letter-spacing: -0.01em;
+  }
+  .sd-other-body {
+    display: block;
+    margin-top: 0.5rem;
+    color: var(--muted);
+    font-size: 0.92rem;
+    line-height: 1.45;
+  }
+  .sd-other-arrow {
+    display: inline-block;
+    margin-top: 0.9rem;
+    color: var(--accent);
+    font-size: 1.1rem;
+    transition: transform 0.2s var(--ease);
+  }
+  .sd-other-card:hover .sd-other-arrow { transform: translateX(5px); }
+
+  @media (max-width: 860px) {
+    .sd-grid { grid-template-columns: 1fr; }
+    .sd-aside { position: static; }
+    .sd-other-grid { grid-template-columns: 1fr; }
+  }
+</style>

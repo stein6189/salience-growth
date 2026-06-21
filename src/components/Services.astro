@@ -1,7 +1,9 @@
 ---
 import { getContent } from '../data/site';
 const { lang = 'en' } = Astro.props;
-const { services } = getContent(lang);
+const c = getContent(lang);
+const { services } = c;
+const base = c.serviceUi.servicesBase;
 ---
 
 <section class="section services" id="services">
@@ -14,14 +16,14 @@ const { services } = getContent(lang);
 
     <div class="grid">
       {services.items.map((s, i) => (
-        <article class="service reveal" style={`transition-delay:${(i % 3) * 70}ms`}>
+        <a class="service reveal" href={`${base}/${s.slug}/`} style={`transition-delay:${(i % 3) * 70}ms`}>
           <div class="top">
             <h3>{s.title}</h3>
             <span class="dur">{s.duration}</span>
           </div>
           <p>{s.body}</p>
           <span class="arrow" aria-hidden="true">→</span>
-        </article>
+        </a>
       ))}
     </div>
   </div>
@@ -36,10 +38,12 @@ const { services } = getContent(lang);
   }
   .service {
     position: relative;
+    display: block;
     background: var(--paper);
     border: 1px solid var(--line);
     border-radius: var(--radius);
     padding: 1.6rem;
+    color: inherit;
     transition: border-color 0.25s var(--ease), transform 0.25s var(--ease), box-shadow 0.25s var(--ease);
   }
   .service:hover {
