@@ -53,7 +53,7 @@ const en = {
     subtitle:
       'Salience Growth helps B2B service firms win and grow Tier-1 accounts by treating client acquisition as a product, built on how your buyers actually make decisions. No cold calling. No pitching your way in.',
     primaryCta: { label: 'Book a working session', href: '#contact' },
-    secondaryCta: { label: 'See the Method', href: '#method' },
+    secondaryCta: { label: 'Take the 2-minute Fit Check', href: '#fitcheck' },
     trustLine: 'Demand built on authority, tracked and improved like software. Not a campaign you hope sticks.',
   },
   proofStrip: [
@@ -127,12 +127,14 @@ const en = {
   operate: {
     eyebrow: 'Execution',
     title: 'We don’t hand you a strategy. We build the machine.',
-    body: 'Most consultancies leave you with a deck. We put a working acquisition system in place, built around your firm, owned by your team, and still running long after we leave. Four engines do the heavy lifting.',
+    body: 'Most consultancies leave you with a deck. We put a working acquisition system in place, built around your firm, owned by your team, and still running long after we leave. Four engines do the heavy lifting, on one connected backbone.',
+    foundationLabel: 'The Foundation',
     engines: [
-      { n: '01', title: 'The Fit Engine', body: 'We score accounts before you spend a call on them. A data model reads the signals that actually predict fit: intent, timing, and how the buying decision is structured, then ranks your target list by who is genuinely ready to engage. Your senior people work the few accounts that matter, not the many that don\'t.' },
-      { n: '02', title: 'The Sales-Hook Engine', body: 'A library of value-first reasons for a senior buyer to want to engage, each one a give, not an ask, built from how decision-makers actually say yes. Outreach that lands as a compliment, never a cold pitch.' },
-      { n: '03', title: 'The Nurturing Engine', body: 'Relevant, trusted-advisor contact across every account, at scale. The system handles the consistency; your senior people spend their time only where their judgement actually changes the outcome.' },
-      { n: '04', title: 'The Acquisition Backbone', body: 'The operating layer beneath it all: your process, data, content and AI, working as one connected system. We build it, embed it, and hand you the keys.' },
+      { n: '01', title: 'The Prospecting Engine', body: 'We don\'t guess who to pursue. We predict it. A data model scores your market for genuine fit and reads the signals that say an account is ready to listen: intent, timing, and how the decision actually gets made. You aim every motion at the few accounts that matter, never the many that don\'t.' },
+      { n: '02', title: 'The Authority Engine', body: 'We turn your experts\' knowledge into the thought leadership your target buyers need to see, so you\'re a name they already trust before you ever reach out. Your leaders supply the judgement; the engine does the hours. Visible authority on the shortlist, without the calendar cost.' },
+      { n: '03', title: 'The Sales-Hook Engine', body: 'A library of value-first reasons for a senior buyer to want to engage, each one a give, not an ask, built from how decision-makers actually say yes. Outreach that lands as a compliment, never a cold pitch.' },
+      { n: '04', title: 'The Nurturing Engine', body: 'Relevant, trusted-advisor contact across every account, at scale. The system handles the consistency; your senior people spend their time only where their judgement actually changes the outcome.' },
+      { n: '', title: 'The Acquisition Backbone', body: 'The operating layer beneath it all: your process, data, content and AI, working as one connected system. We build it, embed it, and hand you the keys.', foundation: true },
     ],
     cta: { lead: 'The specifics get tailored to your firm. That is what the engagement is for, not a free download.', label: 'See if it fits your firm', href: '#contact' },
   },
@@ -182,6 +184,95 @@ const en = {
     qualCorroboration: {
       quote: 'For a fifth of our previous spend, we now get 15× the leads. And thanks to the pre-qualifying, every single one is genuinely relevant to us.',
       role: 'Partner, IT management consultancy',
+    },
+  },
+  fitCheck: {
+    eyebrow: 'The Fit Check',
+    title: 'Not sure it\'s you? Find out in 2 minutes.',
+    subtitle: 'The same fit-scoring logic we run on target accounts, pointed at your firm. No email, no call. You\'ll get a straight answer, including "not yet".',
+    cta: 'Take the 2-minute Fit Check',
+    progressLabel: 'Question',
+    progressOf: 'of',
+    retake: 'Start over',
+    questions: [
+      {
+        text: 'What best describes your firm?',
+        weakDimension: 'your firm type is a less natural fit for the method',
+        options: [
+          { label: 'Expertise-led B2B service or consulting firm', score: 2 },
+          { label: 'Product or SaaS company', score: 1 },
+          { label: 'High-volume agency', score: 0 },
+          { label: 'Other', score: 0 },
+        ],
+      },
+      {
+        text: 'The accounts you most want to win are...',
+        weakDimension: 'you\'re optimizing for volume more than enterprise relevance',
+        options: [
+          { label: 'Larger or more enterprise than your typical client today', score: 2 },
+          { label: 'Same size, you just want more of them', score: 1 },
+          { label: 'Smaller and higher-volume', score: 0 },
+        ],
+      },
+      {
+        text: 'Today, your biggest deals come from...',
+        weakDimension: 'your current deal flow isn\'t yet systematized',
+        options: [
+          { label: 'One or two key people\'s relationships', score: 2 },
+          { label: 'Referrals you can\'t predict or repeat', score: 2 },
+          { label: 'A repeatable outbound system that already works', score: 1 },
+        ],
+      },
+      {
+        text: 'Do you have genuine, demonstrable expertise to build visible authority on?',
+        weakDimension: 'your authority base is still thin',
+        options: [
+          { label: 'Yes, deep but underexposed', score: 2 },
+          { label: 'Some, but a thin track record so far', score: 1 },
+          { label: 'Not really, fairly commoditized offering', score: 0, disqualifier: true },
+        ],
+      },
+      {
+        text: 'What are you actually looking for?',
+        weakDimension: 'you\'re looking for done-for-you results rather than a system your team owns',
+        options: [
+          { label: 'A system our team owns and runs', score: 2 },
+          { label: 'A hands-off, done-for-you lead faucet', score: 1 },
+          { label: 'A quick one-off campaign', score: 0, disqualifier: true },
+        ],
+      },
+    ],
+    results: {
+      strong: {
+        tag: 'Strong fit',
+        heading: 'This is exactly who the method is built for.',
+        body: 'You have real expertise, you\'re chasing bigger accounts than your current motion can reliably reach, and you want a system you own, not a campaign that fades. That\'s the whole design.',
+        ctaPrimary: 'Book a working session',
+        ctaSecondary: 'Read the method in depth',
+      },
+      partial: {
+        tag: 'Promising fit',
+        heading: 'Promising, with one thing to settle first.',
+        bodyPre: 'The shape fits, but ',
+        bodyPost: '. Worth a conversation before we start. Or read how the method works first.',
+        cta: 'Read the method',
+      },
+      notYet: {
+        tag: 'Not yet',
+        heading: 'Honestly? We\'re probably not your best move right now.',
+        body: 'The method works when there\'s real, demonstrable expertise to make visible and an appetite to build a system rather than run a one-off. If that\'s not where you are yet, a focused authority or positioning project, or a volume channel that fits your model, will serve you better. No hard feelings, no booking needed.',
+        cta: 'See the method anyway',
+      },
+    },
+    emailCapture: {
+      prompt: 'Want this as a one-page breakdown? Drop an email. That\'s the only thing it\'s for.',
+      placeholder: 'Work email',
+      consentPre: 'I consent to my details being processed in line with the ',
+      consentLink: 'privacy policy',
+      consentHref: '/datenschutz',
+      consentPost: '.',
+      submit: 'Send breakdown',
+      successMsg: 'Done. Check your inbox within one business day.',
     },
   },
   testimonials: {
@@ -272,7 +363,7 @@ const de: typeof en = {
     subtitle:
       'Salience Growth hilft B2B-Dienstleistern, Tier-1-Kunden zu gewinnen und auszubauen, indem wir Neukundengewinnung wie ein Produkt entwickeln, basierend darauf, wie Ihre Kunden wirklich entscheiden. Kein Cold Calling. Kein Pitchen gegen günstigere Anbieter.',
     primaryCta: { label: 'Arbeitsgespräch buchen', href: '#contact' },
-    secondaryCta: { label: 'Die Methode ansehen', href: '#method' },
+    secondaryCta: { label: '2-Minuten-Fit-Check starten', href: '#fitcheck' },
     trustLine: 'Nachfrage durch Autorität, aufgebaut und gemessen wie Software. Nicht wie eine Kampagne, die verpufft.',
   },
   proofStrip: [
@@ -346,12 +437,14 @@ const de: typeof en = {
   operate: {
     eyebrow: 'Umsetzung',
     title: 'Wir übergeben keine Strategie. Wir bauen die Maschine.',
-    body: 'Die meisten Beratungen lassen Sie mit einem Deck zurück. Wir bauen ein funktionierendes Akquise-System, zugeschnitten auf Ihre Firma, betrieben von Ihrem Team, und noch lange aktiv, nachdem wir fertig sind. Vier Engines tragen die Hauptlast.',
+    body: 'Die meisten Beratungen lassen Sie mit einem Deck zurück. Wir bauen ein funktionierendes Akquise-System, zugeschnitten auf Ihre Firma, betrieben von Ihrem Team, und noch lange aktiv, nachdem wir fertig sind. Vier Engines tragen die Hauptlast, auf einem gemeinsamen Fundament.',
+    foundationLabel: 'Das Fundament',
     engines: [
-      { n: '01', title: 'The Fit Engine', body: 'Wir bewerten Zielkunden, bevor Sie einen Anruf auf sie verwenden. Ein Datenmodell liest die Signale, die Potenzial tatsächlich vorhersagen: Timing, Kaufstruktur und Absicht, und priorisiert Ihre Liste nach denen, die wirklich gesprächsbereit sind. Ihre Senior-Mitarbeiter konzentrieren sich auf die wenigen Accounts, die zählen, nicht auf die vielen, die es nicht tun.' },
-      { n: '02', title: 'The Sales-Hook Engine', body: 'Eine Bibliothek wertorientierter Anlässe, bei denen ein Senior-Käufer von sich aus ins Gespräch kommen will: jeder ein Geben, kein Nehmen, entwickelt daraus, wie Entscheider tatsächlich Ja sagen. Outreach, der wie ein Kompliment ankommt, nie wie ein kalter Pitch.' },
-      { n: '03', title: 'The Nurturing Engine', body: 'Relevante Kontaktpunkte über jeden Account hinweg, skalierbar. Das System sorgt für Konstanz; Ihre Führungskräfte setzen ihre Zeit nur dort ein, wo ihr Urteil das Ergebnis wirklich verändert.' },
-      { n: '04', title: 'The Acquisition Backbone', body: 'Das Fundament darunter: Ihre Prozesse, Daten, Content und KI als ein zusammenhängendes System. Wir bauen es, verankern es und übergeben Ihnen die Schlüssel.' },
+      { n: '01', title: 'The Prospecting Engine', body: 'Wir raten nicht, wen wir ansprechen sollen. Wir sagen es vorher. Ein Datenmodell bewertet Ihren Markt auf echte Passung und liest die Signale, die zeigen, wann ein Account bereit ist zuzuhören: Absicht, Timing und wie die Entscheidung tatsächlich fällt. Jede Aktion zielt auf die wenigen Accounts, die zählen, nie auf die vielen, die es nicht tun.' },
+      { n: '02', title: 'The Authority Engine', body: 'Wir machen das Wissen Ihrer Experten zu genau der Thought Leadership, die Ihre Zielkunden sehen müssen, damit Sie ein bekannter Name sind, bevor Sie sich melden. Ihre Führungskräfte liefern das Urteil; die Engine erledigt die Stunden. Sichtbare Autorität auf der Shortlist, ohne den Kalenderaufwand.' },
+      { n: '03', title: 'The Sales-Hook Engine', body: 'Eine Bibliothek wertorientierter Anlässe, bei denen ein Senior-Käufer von sich aus ins Gespräch kommen will: jeder ein Geben, kein Nehmen, entwickelt daraus, wie Entscheider tatsächlich Ja sagen. Outreach, der wie ein Kompliment ankommt, nie wie ein kalter Pitch.' },
+      { n: '04', title: 'The Nurturing Engine', body: 'Relevante Kontaktpunkte über jeden Account hinweg, skalierbar. Das System sorgt für Konstanz; Ihre Führungskräfte setzen ihre Zeit nur dort ein, wo ihr Urteil das Ergebnis wirklich verändert.' },
+      { n: '', title: 'The Acquisition Backbone', body: 'Das Fundament darunter: Ihre Prozesse, Daten, Content und KI als ein zusammenhängendes System. Wir bauen es, verankern es und übergeben Ihnen die Schlüssel.', foundation: true },
     ],
     cta: { lead: 'Die konkrete Ausgestaltung wird auf Ihre Firma zugeschnitten. Dafür ist das Mandat da, nicht für einen kostenlosen Download.', label: 'Prüfen, ob es zu Ihrer Firma passt', href: '#contact' },
   },
@@ -401,6 +494,95 @@ const de: typeof en = {
     qualCorroboration: {
       quote: 'Für ein Fünftel des bisherigen Budgets erhalten wir heute 15-mal so viele Leads, und durch das Pre-Qualifying ist jeder einzelne wirklich relevant für uns.',
       role: 'Partner, IT-Management-Beratung',
+    },
+  },
+  fitCheck: {
+    eyebrow: 'Der Fit Check',
+    title: 'Nicht sicher, ob Sie dazugehören? In 2 Minuten Klarheit.',
+    subtitle: 'Dieselbe Fit-Logik, die wir auf Ihre Zielkunden anwenden, jetzt auf Ihre Firma gerichtet. Keine E-Mail, kein Anruf. Sie bekommen eine ehrliche Antwort, auch wenn die lautet: noch nicht.',
+    cta: 'Zum 2-Minuten-Fit-Check',
+    progressLabel: 'Frage',
+    progressOf: 'von',
+    retake: 'Neu starten',
+    questions: [
+      {
+        text: 'Was beschreibt Ihre Firma am besten?',
+        weakDimension: 'Ihr Firmentyp ist eine weniger natürliche Passung für die Methode',
+        options: [
+          { label: 'Expertengeführter B2B-Dienstleister oder Beratung', score: 2 },
+          { label: 'Produkt- oder SaaS-Unternehmen', score: 1 },
+          { label: 'Hochvolumen-Agentur', score: 0 },
+          { label: 'Sonstiges', score: 0 },
+        ],
+      },
+      {
+        text: 'Die Kunden, die Sie am liebsten gewinnen würden, sind...',
+        weakDimension: 'Sie optimieren eher auf Volumen als auf Enterprise-Relevanz',
+        options: [
+          { label: 'Größer oder mehr Enterprise als Ihre heutigen Kunden', score: 2 },
+          { label: 'Gleiche Größe, Sie wollen einfach mehr davon', score: 1 },
+          { label: 'Kleiner und mit höherem Volumen', score: 0 },
+        ],
+      },
+      {
+        text: 'Ihre größten Deals entstehen heute durch...',
+        weakDimension: 'Ihr aktueller Dealflow ist noch nicht systematisiert',
+        options: [
+          { label: 'Ein, zwei persönliche Schlüsselbeziehungen', score: 2 },
+          { label: 'Empfehlungen, die Sie nicht steuern können', score: 2 },
+          { label: 'Ein bereits funktionierendes Outbound-System', score: 1 },
+        ],
+      },
+      {
+        text: 'Haben Sie echte, nachweisbare Expertise, auf der sich sichtbare Autorität aufbauen lässt?',
+        weakDimension: 'Ihre Expertisebasis ist noch zu dünn',
+        options: [
+          { label: 'Ja, tief, aber wenig sichtbar', score: 2 },
+          { label: 'Etwas, aber eine dünne Erfolgsbilanz bisher', score: 1 },
+          { label: 'Nicht wirklich, recht austauschbares Angebot', score: 0, disqualifier: true },
+        ],
+      },
+      {
+        text: 'Was suchen Sie eigentlich?',
+        weakDimension: 'Sie suchen fertige Ergebnisse, kein System, das Ihr Team besitzt',
+        options: [
+          { label: 'Ein System, das unser Team selbst betreibt', score: 2 },
+          { label: 'Fertige Leads ohne eigenen Aufwand', score: 1 },
+          { label: 'Eine schnelle Einzel-Kampagne', score: 0, disqualifier: true },
+        ],
+      },
+    ],
+    results: {
+      strong: {
+        tag: 'Starke Passung',
+        heading: 'Genau für Sie ist die Methode gebaut.',
+        body: 'Sie haben echte Expertise, Sie wollen größere Kunden als Ihr heutiges Vorgehen zuverlässig erreicht, und Sie wollen ein System, das Ihr Team besitzt, keine Kampagne, die verpufft. Das ist das Grunddesign.',
+        ctaPrimary: 'Arbeitsgespräch buchen',
+        ctaSecondary: 'Die Methode im Detail',
+      },
+      partial: {
+        tag: 'Vielversprechend',
+        heading: 'Vielversprechend, mit einer Sache, die es zu klären gilt.',
+        bodyPre: 'Die Grundform passt, aber ',
+        bodyPost: '. Das ist ein Gespräch wert, bevor wir loslegen. Oder lesen Sie zuerst, wie die Methode wirklich funktioniert.',
+        cta: 'Die Methode lesen',
+      },
+      notYet: {
+        tag: 'Noch nicht',
+        heading: 'Ehrlich gesagt: Wir sind gerade wahrscheinlich nicht Ihr bester Zug.',
+        body: 'Die Methode funktioniert, wenn echte, nachweisbare Expertise vorhanden ist und der Wille, ein System aufzubauen, statt eine Einmalkampagne zu fahren. Wenn das noch nicht der Fall ist, werden ein Positionierungs-Projekt oder ein Volumenkanal, der zu Ihrem Modell passt, besser für Sie funktionieren. Kein Problem, kein Anruf nötig.',
+        cta: 'Trotzdem die Methode ansehen',
+      },
+    },
+    emailCapture: {
+      prompt: 'Ergebnis als eine Seite per Mail? Einfach E-Mail-Adresse hinterlassen.',
+      placeholder: 'Geschäftliche E-Mail',
+      consentPre: 'Ich willige ein, dass meine Angaben gemäß der ',
+      consentLink: 'Datenschutzerklärung',
+      consentHref: '/datenschutz',
+      consentPost: ' verarbeitet werden.',
+      submit: 'Zusammenfassung senden',
+      successMsg: 'Erledigt. Sie hören innerhalb eines Werktags von uns.',
     },
   },
   testimonials: {

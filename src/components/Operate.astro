@@ -2,6 +2,11 @@
 import { getContent } from '../data/site';
 const { lang = 'en' } = Astro.props;
 const { operate } = getContent(lang);
+
+type EngineItem = { n: string; title: string; body: string; foundation?: boolean };
+const engines = operate.engines as EngineItem[];
+const topEngines = engines.filter((e) => !e.foundation);
+const foundation = engines.find((e) => e.foundation);
 ---
 
 <section class="section operate" id="operate">
@@ -13,14 +18,27 @@ const { operate } = getContent(lang);
     </div>
 
     <div class="engines">
-      {operate.engines.map((e, i) => (
-        <article class:list={['engine', 'reveal', { featured: i === 0 }, { dark: i === operate.engines.length - 1 }]} style={`transition-delay:${i * 80}ms`}>
+      {topEngines.map((e, i) => (
+        <article class="engine reveal" style={`transition-delay:${i * 70}ms`}>
           <span class="n">{e.n}</span>
           <h3>{e.title}</h3>
           <p>{e.body}</p>
         </article>
       ))}
     </div>
+
+    {foundation && (
+      <article class="engine foundation dark reveal">
+        <div class="foundation-meta">
+          <span class="foundation-label">{operate.foundationLabel}</span>
+          <span class="n">{foundation.n}</span>
+        </div>
+        <div class="foundation-content">
+          <h3>{foundation.title}</h3>
+          <p>{foundation.body}</p>
+        </div>
+      </article>
+    )}
 
     <div class="cta reveal">
       <p>{operate.cta.lead}</p>
@@ -35,9 +53,10 @@ const { operate } = getContent(lang);
   .engines {
     margin-top: clamp(2.5rem, 5vw, 3.5rem);
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     gap: 1.1rem;
   }
+
   .engine {
     background: var(--paper);
     border: 1px solid var(--line);
@@ -46,43 +65,69 @@ const { operate } = getContent(lang);
     display: flex;
     flex-direction: column;
   }
-  .engine.featured {
-    grid-column: 1 / -1;
-    display: grid;
-    grid-template-columns: auto 1fr;
-    grid-template-rows: auto auto;
-    column-gap: 2rem;
-    background: var(--ink);
-    border-color: var(--ink);
-    color: var(--paper);
-  }
-  .engine.featured .n { grid-row: 1; grid-column: 1; color: #ffb98f; }
-  .engine.featured h3 { grid-row: 1; grid-column: 2; color: var(--paper); align-self: end; }
-  .engine.featured p { grid-row: 2; grid-column: 2; color: rgba(251,249,244,0.78); }
-  .engine.dark {
-    background: var(--ink);
-    border-color: var(--ink);
-    color: var(--paper);
-  }
+
   .n {
     font-family: var(--font-serif);
     font-size: 1.4rem;
     color: var(--accent-ink);
     line-height: 1;
   }
-  .engine.dark .n { color: #ffb98f; }
+
   .engine h3 {
     margin-top: 0.85rem;
-    font-size: 1.3rem;
+    font-size: 1.15rem;
     letter-spacing: -0.01em;
+    line-height: 1.2;
   }
-  .engine.dark h3 { color: var(--paper); }
+
   .engine p {
     margin-top: 0.7rem;
     color: var(--muted);
+    font-size: 0.93rem;
+    line-height: 1.6;
+  }
+
+  /* Foundation card */
+  .foundation {
+    margin-top: 1.1rem;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0 2.5rem;
+    align-items: start;
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--paper);
+  }
+
+  .foundation-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding-top: 0.15rem;
+  }
+
+  .foundation-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(251, 249, 244, 0.5);
+    white-space: nowrap;
+  }
+
+  .foundation .n { color: #ffb98f; }
+
+  .foundation-content h3 {
+    font-size: 1.35rem;
+    color: var(--paper);
+    margin-top: 0;
+  }
+
+  .foundation-content p {
+    margin-top: 0.6rem;
+    color: rgba(251, 249, 244, 0.75);
     font-size: 0.97rem;
   }
-  .engine.dark p { color: rgba(251, 249, 244, 0.78); }
 
   .cta {
     margin-top: clamp(2.25rem, 4vw, 3rem);
@@ -103,9 +148,12 @@ const { operate } = getContent(lang);
     color: var(--ink);
   }
 
-  @media (max-width: 860px) {
+  @media (max-width: 1024px) {
+    .engines { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (max-width: 640px) {
     .engines { grid-template-columns: 1fr; }
-    .engine.featured { grid-template-columns: 1fr; grid-template-rows: auto; }
-    .engine.featured .n, .engine.featured h3, .engine.featured p { grid-column: 1; grid-row: auto; }
+    .foundation { grid-template-columns: 1fr; gap: 1rem 0; }
   }
 </style>

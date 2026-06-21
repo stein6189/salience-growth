@@ -1,0 +1,432 @@
+---
+import { getContent, type Lang } from '../data/site';
+const { lang = 'en' } = Astro.props as { lang: Lang };
+const fc = getContent(lang).fitCheck;
+
+type FcOpt = { label: string; score: number; disqualifier?: boolean };
+type FcQuestion = { text: string; weakDimension: string; options: FcOpt[] };
+const questions = fc.questions as FcQuestion[];
+---
+
+<section class="section fit-check" id="fitcheck">
+  <div class="container">
+    <div class="fc-head">
+      <p class="eyebrow reveal">{fc.eyebrow}</p>
+      <h2 class="section-title reveal">{fc.title}</h2>
+      <p class="lead reveal">{fc.subtitle}</p>
+    </div>
+
+    <div class="fc-widget reveal" id="fc-widget">
+      <div class="fc-inner">
+        <!-- Progress -->
+        <div class="fc-progress-wrap" id="fc-progress-wrap">
+          <div class="fc-progress-bar" id="fc-progress-bar" style="width:20%"></div>
+        </div>
+        <p class="fc-progress-label" id="fc-progress-label">
+          {fc.progressLabel} 1 {fc.progressOf} {questions.length}
+        </p>
+
+        <!-- Questions -->
+        <div id="fc-questions">
+          {questions.map((q, qi) => (
+            <div class="fc-step" data-q={qi} data-dimension={q.weakDimension} style={qi === 0 ? '' : 'display:none'}>
+              <p class="fc-qtext">{q.text}</p>
+              <div class="fc-opts">
+                {q.options.map((opt) => (
+                  <button
+                    class="fc-opt"
+                    data-score={opt.score}
+                    data-disqualifier={opt.disqualifier ? 'true' : ''}
+                  >
+                    {opt.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <!-- Results (hidden until complete) -->
+        <div id="fc-result" style="display:none">
+          <!-- Strong fit -->
+          <div class="fc-r" id="fc-r-strong" style="display:none">
+            <span class="fc-tag fc-tag-strong">{fc.results.strong.tag}</span>
+            <h3>{fc.results.strong.heading}</h3>
+            <p class="fc-rbody">{fc.results.strong.body}</p>
+            <div class="fc-rctas">
+              <a class="btn btn-primary" href="#contact">{fc.results.strong.ctaPrimary}</a>
+              <a class="btn btn-ghost" href="#method">{fc.results.strong.ctaSecondary}</a>
+            </div>
+          </div>
+
+          <!-- Partial fit -->
+          <div class="fc-r" id="fc-r-partial" style="display:none">
+            <span class="fc-tag fc-tag-partial">{fc.results.partial.tag}</span>
+            <h3>{fc.results.partial.heading}</h3>
+            <p class="fc-rbody">{fc.results.partial.bodyPre}<em id="fc-dim"></em>{fc.results.partial.bodyPost}</p>
+            <div class="fc-rctas">
+              <a class="btn btn-ghost" href="#method">{fc.results.partial.cta}</a>
+            </div>
+          </div>
+
+          <!-- Not yet -->
+          <div class="fc-r" id="fc-r-notyet" style="display:none">
+            <span class="fc-tag fc-tag-notyet">{fc.results.notYet.tag}</span>
+            <h3>{fc.results.notYet.heading}</h3>
+            <p class="fc-rbody">{fc.results.notYet.body}</p>
+            <div class="fc-rctas">
+              <a class="btn btn-ghost" href="#method">{fc.results.notYet.cta}</a>
+            </div>
+          </div>
+
+          <!-- Email capture (appears after result) -->
+          <div class="fc-email" id="fc-email">
+            <p class="fc-email-prompt">{fc.emailCapture.prompt}</p>
+            <form
+              class="fc-email-form"
+              id="fc-email-form"
+              data-netlify="true"
+              name="fitcheck-email"
+              method="POST"
+            >
+              <input type="hidden" name="form-name" value="fitcheck-email" />
+              <div class="fc-email-row">
+                <input
+                  class="fc-email-input"
+                  type="email"
+                  name="email"
+                  placeholder={fc.emailCapture.placeholder}
+                  required
+                />
+                <button type="submit" class="btn btn-primary">{fc.emailCapture.submit}</button>
+              </div>
+              <label class="fc-consent">
+                <input type="checkbox" name="consent" required />
+                <span>
+                  {fc.emailCapture.consentPre}
+                  <a href={fc.emailCapture.consentHref}>{fc.emailCapture.consentLink}</a>
+                  {fc.emailCapture.consentPost}
+                </span>
+              </label>
+            </form>
+            <p class="fc-success" id="fc-success" style="display:none">{fc.emailCapture.successMsg}</p>
+          </div>
+
+          <button class="fc-retake" id="fc-retake">{fc.retake}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  const widget = document.getElementById('fc-widget');
+  if (widget) {
+    const totalQ = widget.querySelectorAll('.fc-step').length;
+    const answers: { score: number; disqualifier: boolean; dimension: string }[] = [];
+
+    function updateProgress(step: number) {
+      const bar = document.getElementById('fc-progress-bar') as HTMLElement | null;
+      const label = document.getElementById('fc-progress-label') as HTMLElement | null;
+      if (bar) bar.style.width = `${(step / totalQ) * 100}%`;
+      if (label) {
+        const raw = label.textContent ?? '';
+        const parts = raw.trim().split(/\s+/);
+        const ofIdx = parts.findIndex((p) => !isNaN(parseInt(p)) && parseInt(p) === (step - 1));
+        parts[ofIdx >= 0 ? ofIdx : parts.length - 3] = String(step);
+        label.textContent = parts.join(' ');
+        const nums = label.querySelectorAll<HTMLElement>('');
+        void nums;
+        label.innerHTML = label.textContent
+          .replace(/\d+/, `<strong>${step}</strong>`);
+      }
+    }
+
+    widget.querySelectorAll<HTMLButtonElement>('.fc-opt').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const step = btn.closest<HTMLElement>('.fc-step');
+        if (!step) return;
+        const qi = parseInt(step.dataset.q ?? '0');
+        const score = parseInt(btn.dataset.score ?? '0');
+        const disqualifier = btn.dataset.disqualifier === 'true';
+        const dimension = step.dataset.dimension ?? '';
+
+        answers[qi] = { score, disqualifier, dimension };
+
+        step.querySelectorAll('.fc-opt').forEach((b) => b.classList.remove('selected'));
+        btn.classList.add('selected');
+
+        setTimeout(() => {
+          if (qi < totalQ - 1) {
+            step.style.display = 'none';
+            const next = widget.querySelector<HTMLElement>(`.fc-step[data-q="${qi + 1}"]`);
+            if (next) next.style.display = '';
+            updateProgress(qi + 2);
+          } else {
+            showResult();
+          }
+        }, 220);
+      });
+    });
+
+    function showResult() {
+      const questionsEl = document.getElementById('fc-questions');
+      const resultEl = document.getElementById('fc-result');
+      const progressWrap = document.getElementById('fc-progress-wrap');
+      const progressLabel = document.getElementById('fc-progress-label');
+      if (questionsEl) questionsEl.style.display = 'none';
+      if (progressWrap) progressWrap.style.display = 'none';
+      if (progressLabel) progressLabel.style.display = 'none';
+      if (resultEl) resultEl.style.display = '';
+
+      const total = answers.reduce((s, a) => s + a.score, 0);
+      const hasDisqualifier = answers.some((a) => a.disqualifier);
+
+      let resultId: string;
+      if (hasDisqualifier || total <= 3) {
+        resultId = 'fc-r-notyet';
+      } else if (total >= 8) {
+        resultId = 'fc-r-strong';
+      } else {
+        resultId = 'fc-r-partial';
+        const weakest = answers.reduce((min, a) => (a.score < min.score ? a : min), answers[0]);
+        const dimEl = document.getElementById('fc-dim');
+        if (dimEl && weakest.dimension) dimEl.textContent = weakest.dimension;
+      }
+
+      const resultPane = document.getElementById(resultId);
+      if (resultPane) resultPane.style.display = '';
+    }
+
+    document.getElementById('fc-retake')?.addEventListener('click', () => {
+      answers.length = 0;
+      widget.querySelectorAll<HTMLButtonElement>('.fc-opt').forEach((b) => b.classList.remove('selected'));
+      widget.querySelectorAll<HTMLElement>('.fc-step').forEach((s, i) => {
+        s.style.display = i === 0 ? '' : 'none';
+      });
+      widget.querySelectorAll<HTMLElement>('.fc-r').forEach((r) => { r.style.display = 'none'; });
+      const questionsEl = document.getElementById('fc-questions');
+      const resultEl = document.getElementById('fc-result');
+      const progressWrap = document.getElementById('fc-progress-wrap');
+      const progressLabel = document.getElementById('fc-progress-label');
+      if (questionsEl) questionsEl.style.display = '';
+      if (resultEl) resultEl.style.display = 'none';
+      if (progressWrap) progressWrap.style.display = '';
+      if (progressLabel) progressLabel.style.display = '';
+      const bar = document.getElementById('fc-progress-bar') as HTMLElement | null;
+      if (bar) bar.style.width = `${(1 / totalQ) * 100}%`;
+    });
+
+    const emailForm = document.getElementById('fc-email-form') as HTMLFormElement | null;
+    emailForm?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const data = new FormData(emailForm);
+      try {
+        await fetch('/', { method: 'POST', body: data });
+        emailForm.style.display = 'none';
+        const success = document.getElementById('fc-success');
+        if (success) success.style.display = '';
+      } catch {
+        emailForm.submit();
+      }
+    });
+  }
+</script>
+
+<style>
+  .fit-check { background: var(--paper-2); }
+
+  .fc-widget {
+    margin-top: clamp(2.5rem, 5vw, 3.5rem);
+    max-width: 760px;
+  }
+
+  .fc-inner {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: clamp(1.75rem, 4vw, 2.75rem);
+  }
+
+  /* Progress */
+  .fc-progress-wrap {
+    height: 3px;
+    background: var(--line);
+    border-radius: 99px;
+    margin-bottom: 1rem;
+    overflow: hidden;
+  }
+  .fc-progress-bar {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 99px;
+    transition: width 0.3s var(--ease);
+  }
+  .fc-progress-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 1.75rem;
+  }
+
+  /* Question */
+  .fc-qtext {
+    font-size: clamp(1.1rem, 2vw, 1.3rem);
+    font-weight: 600;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+
+  .fc-opts {
+    margin-top: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .fc-opt {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 0.85rem 1.1rem;
+    background: var(--paper);
+    border: 1.5px solid var(--line);
+    border-radius: var(--radius-sm);
+    font-size: 0.97rem;
+    font-family: var(--font-sans);
+    color: var(--ink);
+    cursor: pointer;
+    transition: border-color 0.1s var(--ease), background 0.1s var(--ease), transform 0.1s var(--ease);
+  }
+  .fc-opt:hover {
+    border-color: var(--accent);
+    transform: translateX(3px);
+  }
+  .fc-opt.selected {
+    background: var(--accent-soft);
+    border-color: var(--accent);
+    color: var(--ink);
+  }
+
+  /* Result */
+  .fc-r { padding-top: 0.25rem; }
+
+  .fc-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 0.3em 0.75em;
+    border-radius: 999px;
+    margin-bottom: 1.1rem;
+  }
+  .fc-tag-strong { background: #d1fae5; color: #065f46; }
+  .fc-tag-partial { background: #fef3c7; color: #92400e; }
+  .fc-tag-notyet { background: var(--paper-2); color: var(--muted); }
+
+  .fc-r h3 {
+    font-size: clamp(1.3rem, 2.5vw, 1.7rem);
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+
+  .fc-rbody {
+    margin-top: 0.9rem;
+    color: var(--muted);
+    font-size: 1rem;
+    line-height: 1.65;
+    max-width: 60ch;
+  }
+
+  .fc-rbody em {
+    font-style: normal;
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  .fc-rctas {
+    margin-top: 1.5rem;
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  /* Email capture */
+  .fc-email {
+    margin-top: 2.25rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .fc-email-prompt {
+    font-size: 0.97rem;
+    color: var(--muted);
+  }
+
+  .fc-email-row {
+    margin-top: 0.85rem;
+    display: flex;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+  }
+
+  .fc-email-input {
+    flex: 1;
+    min-width: 220px;
+    padding: 0.75rem 1rem;
+    border: 1.5px solid var(--line);
+    border-radius: 999px;
+    font-size: 0.97rem;
+    font-family: var(--font-sans);
+    color: var(--ink);
+    background: var(--paper);
+    transition: border-color 0.1s;
+  }
+  .fc-email-input:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+
+  .fc-consent {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    margin-top: 0.75rem;
+    font-size: 0.84rem;
+    color: var(--muted);
+    line-height: 1.45;
+    cursor: pointer;
+  }
+  .fc-consent input[type="checkbox"] { margin-top: 0.15rem; flex-shrink: 0; }
+  .fc-consent a { color: var(--accent-ink); text-decoration: underline; }
+
+  .fc-success {
+    margin-top: 0.75rem;
+    font-weight: 600;
+    color: #065f46;
+    font-size: 0.95rem;
+  }
+
+  /* Retake */
+  .fc-retake {
+    display: inline-block;
+    margin-top: 1.75rem;
+    font-size: 0.84rem;
+    font-weight: 600;
+    color: var(--muted);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    transition: color 0.1s;
+  }
+  .fc-retake:hover { color: var(--ink); }
+</style>
