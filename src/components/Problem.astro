@@ -1,0 +1,121 @@
+---
+import { getContent } from '../data/site';
+const { lang = 'en' } = Astro.props;
+const { problem } = getContent(lang);
+---
+
+<section class="section problem">
+  <div class="container">
+    <p class="eyebrow reveal">{problem.eyebrow}</p>
+    <h2 class="section-title reveal">{problem.title}</h2>
+    <p class="lead reveal">{problem.body}</p>
+
+    <div class="grid">
+      {problem.points.map((p, i) => (
+        <article class="card reveal" style={`transition-delay:${i * 80}ms`}>
+          <span class="num">{String(i + 1).padStart(2, '0')}</span>
+          <h3>{p.title}</h3>
+          <p>{p.body}</p>
+        </article>
+      ))}
+    </div>
+
+    <div class="whynow reveal">
+      <h3 class="whynow-head">{problem.whyNow.heading}</h3>
+      <div class="band">
+        {problem.whyNow.stats.map((s) => (
+          <div class="wn-stat">
+            <span class="stat">{s.stat}</span>
+            <span class="label">{s.label}</span>
+            <span class="source">{s.source}</span>
+          </div>
+        ))}
+      </div>
+      <p class="closing">{problem.whyNow.closing}</p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .grid {
+    margin-top: clamp(2.5rem, 5vw, 4rem);
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+  }
+  .card {
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 1.75rem;
+  }
+  .num {
+    font-family: var(--font-serif);
+    font-size: 1.1rem;
+    color: var(--accent-ink);
+  }
+  .card h3 {
+    margin-top: 0.75rem;
+    font-size: 1.25rem;
+  }
+  .card p {
+    margin-top: 0.6rem;
+    color: var(--muted);
+    font-size: 0.98rem;
+  }
+
+  .whynow {
+    margin-top: clamp(2.75rem, 5vw, 4rem);
+    padding-top: clamp(2.25rem, 4vw, 3rem);
+    border-top: 1px solid var(--line);
+  }
+  .whynow-head {
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+  .band {
+    margin-top: 1.75rem;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+  }
+  .wn-stat {
+    border-left: 3px solid var(--accent);
+    padding-left: 1rem;
+  }
+  .wn-stat .stat {
+    display: block;
+    font-family: var(--font-serif);
+    font-size: clamp(1.9rem, 3.4vw, 2.6rem);
+    line-height: 1;
+  }
+  .wn-stat .label {
+    display: block;
+    margin-top: 0.55rem;
+    color: var(--ink);
+    font-size: 0.92rem;
+  }
+  .wn-stat .source {
+    display: block;
+    margin-top: 0.5rem;
+    color: var(--muted);
+    font-size: 0.74rem;
+  }
+  .closing {
+    margin-top: 2rem;
+    max-width: 70ch;
+    font-size: clamp(1.05rem, 1.6vw, 1.2rem);
+    color: var(--ink);
+  }
+
+  @media (max-width: 860px) {
+    .grid { grid-template-columns: 1fr; }
+    .band { grid-template-columns: 1fr 1fr; gap: 1.5rem 1.25rem; }
+  }
+  @media (max-width: 480px) {
+    .band { grid-template-columns: 1fr; }
+  }
+</style>

@@ -1,0 +1,33 @@
+---
+import Header from './Header.astro';
+import Hero from './Hero.astro';
+import Problem from './Problem.astro';
+import Pillars from './Pillars.astro';
+import Method from './Method.astro';
+import Operate from './Operate.astro';
+import Services from './Services.astro';
+import Approach from './Approach.astro';
+import Results from './Results.astro';
+import Testimonials from './Testimonials.astro';
+import About from './About.astro';
+import Contact from './Contact.astro';
+import Footer from './Footer.astro';
+
+const { lang = 'en' } = Astro.props;
+---
+
+<Header lang={lang} />
+<main>
+  <Hero lang={lang} />
+  <Problem lang={lang} />
+  <Pillars lang={lang} />
+  <Method lang={lang} />
+  <Operate lang={lang} />
+  <Services lang={lang} />
+  <Approach lang={lang} />
+  <Results lang={lang} />
+  <Testimonials lang={lang} />
+  <About lang={lang} />
+  <Contact lang={lang} />
+</main>
+<Footer lang={lang} />

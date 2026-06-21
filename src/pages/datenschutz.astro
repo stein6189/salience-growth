@@ -1,0 +1,118 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { site } from '../data/site';
+---
+
+<Layout
+  lang="de"
+  title="Datenschutzerklärung — Salience Growth"
+  description="Informationen zur Verarbeitung personenbezogener Daten auf der Website von Salience Growth (DSGVO)."
+>
+  <Header lang="de" />
+  <main>
+    <section class="section">
+      <div class="container">
+        <article class="legal">
+          <a href="/de/" class="back-link">← Zurück zur Startseite</a>
+          <h1>Datenschutzerklärung</h1>
+          <p class="lead">
+            Der Schutz Ihrer personenbezogenen Daten ist uns wichtig. Wir verarbeiten Daten
+            ausschließlich im Rahmen der gesetzlichen Bestimmungen (DSGVO, BDSG). Diese Website nutzt
+            keine Tracking-Cookies und keine Analyse- oder Marketing-Dienste.
+          </p>
+
+          <h2>1. Verantwortlicher</h2>
+          <p>Verantwortlicher im Sinne der DSGVO ist:</p>
+          <address>
+            Salience Growth – Revenue Growth Beratung<br />
+            Daniel Stein<br />
+            Römerstraße 15a, 82299 Türkenfeld, Deutschland<br />
+            E-Mail: <a href={`mailto:${site.email}`}>{site.email}</a>
+          </address>
+
+          <h2>2. Hosting</h2>
+          <p>
+            Diese Website wird bei Netlify gehostet (Netlify, Inc., 512 2nd Street, Suite 200, San
+            Francisco, CA 94107, USA). Beim Aufruf der Seite verarbeitet der Hoster technisch
+            erforderliche Daten (siehe Server-Logfiles). Rechtsgrundlage ist Art. 6 Abs. 1 lit. f
+            DSGVO (berechtigtes Interesse an einem sicheren und effizienten Betrieb). Eine
+            Übermittlung in die USA erfolgt auf Grundlage der EU-Standardvertragsklauseln bzw. des
+            EU-US Data Privacy Framework.
+          </p>
+
+          <h2>3. Server-Logfiles</h2>
+          <p>
+            Der Hosting-Provider erhebt und speichert automatisch Informationen in Server-Logfiles,
+            die Ihr Browser übermittelt: IP-Adresse, Datum und Uhrzeit der Anfrage, aufgerufene
+            Seite, Referrer-URL, Browsertyp und -version sowie Betriebssystem. Diese Daten dienen der
+            Gewährleistung eines störungsfreien und sicheren Betriebs (Art. 6 Abs. 1 lit. f DSGVO)
+            und werden nach kurzer Zeit gelöscht.
+          </p>
+
+          <h2>4. Kontaktaufnahme</h2>
+          <p>
+            Wenn Sie uns über das Kontaktformular oder per E-Mail kontaktieren, verarbeiten wir die
+            von Ihnen angegebenen Daten (Name, E-Mail-Adresse, Unternehmen, Nachricht) ausschließlich
+            zur Bearbeitung Ihrer Anfrage. Rechtsgrundlage ist Ihre Einwilligung (Art. 6 Abs. 1 lit.
+            a DSGVO) sowie Art. 6 Abs. 1 lit. b DSGVO (vorvertragliche Maßnahmen). Sie können Ihre
+            Einwilligung jederzeit widerrufen. Die Daten werden gelöscht, sobald sie zur
+            Zweckerreichung nicht mehr erforderlich sind und keine gesetzlichen
+            Aufbewahrungspflichten entgegenstehen.
+          </p>
+          <p>
+            Die Übermittlung des Formulars erfolgt per E-Mail an uns; unser E-Mail-Postfach wird über
+            Google Workspace betrieben (Google Ireland Limited, Gordon House, Barrow Street, Dublin
+            4, Irland). Sofern ein Formular-Dienstleister (Formspree, Inc., USA) eingesetzt wird,
+            verarbeitet dieser die Formulardaten als Auftragsverarbeiter; eine Übermittlung in die
+            USA erfolgt auf Grundlage geeigneter Garantien.
+          </p>
+
+          <h2>5. Schriftarten</h2>
+          <p>
+            Diese Website verwendet ausschließlich lokal auf dem Server gespeicherte Schriftarten. Es
+            werden keine Schriftarten von Dritten (z. B. Google Fonts) nachgeladen und keine Daten an
+            Dritte übertragen.
+          </p>
+
+          <h2>6. Cookies</h2>
+          <p>
+            Diese Website setzt keine Tracking-, Marketing- oder Analyse-Cookies ein. Ein
+            Nutzer-Tracking findet nicht statt.
+          </p>
+
+          <h2>7. Terminbuchung</h2>
+          <p>
+            Über die Schaltfläche „Book a call“ gelangen Sie zu einem Buchungstool von Google
+            (Google-Kalender-Terminplanung, Google Ireland Limited). Erst mit dem Aufruf werden dort
+            Daten zur Terminvereinbarung verarbeitet; es gilt dann zusätzlich die Datenschutzerklärung
+            von Google.
+          </p>
+
+          <h2>8. Ihre Rechte</h2>
+          <p>
+            Sie haben das Recht auf Auskunft (Art. 15), Berichtigung (Art. 16), Löschung (Art. 17),
+            Einschränkung der Verarbeitung (Art. 18), Datenübertragbarkeit (Art. 20) sowie
+            Widerspruch (Art. 21 DSGVO). Eine erteilte Einwilligung können Sie jederzeit mit Wirkung
+            für die Zukunft widerrufen (Art. 7 Abs. 3 DSGVO). Ferner steht Ihnen ein Beschwerderecht
+            bei einer Datenschutz-Aufsichtsbehörde zu (Art. 77 DSGVO).
+          </p>
+
+          <h2>9. SSL-/TLS-Verschlüsselung</h2>
+          <p>
+            Diese Website nutzt aus Sicherheitsgründen eine SSL-/TLS-Verschlüsselung. Eine
+            verschlüsselte Verbindung erkennen Sie am „https://“ in der Adresszeile Ihres Browsers.
+          </p>
+
+          <p class="meta">
+            Stand: Juni 2026. Diese Datenschutzerklärung ist eine Vorlage — bitte vor
+            Veröffentlichung rechtlich prüfen lassen, insbesondere falls künftig Analyse-Tools,
+            Newsletter oder weitere Dienste hinzukommen.
+          </p>
+        </article>
+      </div>
+    </section>
+  </main>
+  <Footer lang="de" />
+</Layout>

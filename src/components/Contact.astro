@@ -1,0 +1,192 @@
+---
+import { site, getContent } from '../data/site';
+const { lang = 'en' } = Astro.props;
+const { contact } = getContent(lang);
+const f = contact.form;
+const bookingExternal = site.bookingUrl.startsWith('http');
+---
+
+<section class="section dark contact" id="contact">
+  <div class="container grid">
+    <div class="text">
+      <p class="eyebrow eyebrow-light reveal">{contact.eyebrow}</p>
+      <h2 class="section-title reveal">{contact.title}</h2>
+      <p class="lead reveal">{contact.body}</p>
+
+      <div class="direct reveal">
+        {bookingExternal && (
+          <a class="btn btn-primary" href={site.bookingUrl} target="_blank" rel="noopener">{getContent(lang).ui.bookACall}</a>
+        )}
+        <a class="email" href={`mailto:${site.email}`}>{site.email}</a>
+      </div>
+    </div>
+
+    <form
+      class="form reveal"
+      id="contact-form"
+      action={contact.formAction}
+      method="POST"
+      data-email={site.email}
+      data-msg-sending={f.sending}
+      data-msg-success={f.success}
+      data-msg-error={f.error}
+      data-msg-network={f.networkError}
+    >
+      <div class="field">
+        <label for="name">{f.name}</label>
+        <input id="name" name="name" type="text" autocomplete="name" required />
+      </div>
+      <div class="field">
+        <label for="email">{f.email}</label>
+        <input id="email" name="email" type="email" autocomplete="email" required />
+      </div>
+      <div class="field">
+        <label for="company">{f.company}</label>
+        <input id="company" name="company" type="text" autocomplete="organization" />
+      </div>
+      <div class="field">
+        <label for="message">{f.message}</label>
+        <textarea id="message" name="message" rows="4" required></textarea>
+      </div>
+      <label class="consent">
+        <input type="checkbox" name="consent" required />
+        <span>{f.consentPre}<a href={f.consentHref}>{f.consentLink}</a>{f.consentPost}</span>
+      </label>
+      <button type="submit" class="btn btn-primary submit">{f.submit}</button>
+      <p class="form-note" id="form-note" role="status"></p>
+    </form>
+  </div>
+</section>
+
+<style>
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(2.5rem, 5vw, 4.5rem);
+    align-items: start;
+  }
+  .eyebrow-light { color: #f0a98c; }
+  .eyebrow-light::before { background: var(--accent); }
+
+  .direct {
+    margin-top: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+  .email {
+    font-weight: 500;
+    color: var(--paper);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.35);
+    padding-bottom: 2px;
+    transition: border-color 0.2s var(--ease);
+  }
+  .email:hover { border-color: var(--paper); }
+
+  .form {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: var(--radius);
+    padding: clamp(1.5rem, 3vw, 2.25rem);
+    display: grid;
+    gap: 1.1rem;
+  }
+  .field { display: grid; gap: 0.45rem; }
+  label {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: rgba(251, 249, 244, 0.8);
+  }
+  input, textarea {
+    width: 100%;
+    font: inherit;
+    color: var(--paper);
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: var(--radius-sm);
+    padding: 0.7rem 0.85rem;
+    transition: border-color 0.2s var(--ease), background 0.2s var(--ease);
+  }
+  input:focus, textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+    background: rgba(0, 0, 0, 0.35);
+  }
+  textarea { resize: vertical; }
+  .consent {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    font-size: 0.85rem;
+    color: rgba(251, 249, 244, 0.8);
+    line-height: 1.45;
+    cursor: pointer;
+  }
+  .consent input {
+    width: auto;
+    margin-top: 0.15rem;
+    accent-color: var(--accent);
+    flex-shrink: 0;
+  }
+  .consent a { color: #ffd9c7; text-decoration: underline; }
+  .submit { margin-top: 0.3rem; justify-content: center; }
+  .form-note {
+    font-size: 0.9rem;
+    color: #ffd9c7;
+    min-height: 1.2em;
+  }
+
+  @media (max-width: 860px) {
+    .grid { grid-template-columns: 1fr; }
+  }
+</style>
+
+<script>
+  const form = document.getElementById('contact-form') as HTMLFormElement | null;
+  const note = document.getElementById('form-note');
+
+  if (form) {
+    const action = form.getAttribute('action') || '';
+    const fallbackEmail = form.dataset.email || '';
+    const msg = {
+      sending: form.dataset.msgSending || 'Sending…',
+      success: form.dataset.msgSuccess || 'Thanks — we’ll be in touch shortly.',
+      error: form.dataset.msgError || 'Something went wrong. Please email us directly.',
+      network: form.dataset.msgNetwork || 'Network error. Please email us directly.',
+    };
+    const configured = action && !action.includes('YOUR_FORM_ID');
+
+    form.addEventListener('submit', async (e) => {
+      // If Formspree isn't configured yet, fall back to a mailto so no message is ever lost.
+      if (!configured) {
+        e.preventDefault();
+        const data = new FormData(form);
+        const subject = encodeURIComponent(`Salience Growth — ${data.get('company') || data.get('name')}`);
+        const body = encodeURIComponent(
+          `Name: ${data.get('name')}\nEmail: ${data.get('email')}\nCompany: ${data.get('company')}\n\n${data.get('message')}`
+        );
+        window.location.href = `mailto:${fallbackEmail}?subject=${subject}&body=${body}`;
+        return;
+      }
+
+      e.preventDefault();
+      if (note) note.textContent = msg.sending;
+      try {
+        const res = await fetch(action, {
+          method: 'POST',
+          body: new FormData(form),
+          headers: { Accept: 'application/json' },
+        });
+        if (res.ok) {
+          form.reset();
+          if (note) note.textContent = msg.success;
+        } else {
+          if (note) note.textContent = msg.error;
+        }
+      } catch {
+        if (note) note.textContent = msg.network;
+      }
+    });
+  }
+</script>

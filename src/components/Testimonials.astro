@@ -1,0 +1,66 @@
+---
+import { getContent } from '../data/site';
+const { lang = 'en' } = Astro.props;
+const { testimonials } = getContent(lang);
+---
+
+<section class="section testimonials" id="testimonials">
+  <div class="container">
+    <div class="head">
+      <p class="eyebrow reveal">{testimonials.eyebrow}</p>
+      <h2 class="section-title reveal">{testimonials.title}</h2>
+    </div>
+
+    <div class="grid">
+      {testimonials.items.map((item) => (
+        <figure class="card reveal">
+          <span class="mark" aria-hidden="true">“</span>
+          <blockquote>{item.quote}</blockquote>
+          <figcaption>{item.role}</figcaption>
+        </figure>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .grid {
+    margin-top: clamp(2.5rem, 5vw, 3.5rem);
+    columns: 3;
+    column-gap: 1.1rem;
+  }
+  .card {
+    break-inside: avoid;
+    margin: 0 0 1.1rem;
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 1.6rem;
+  }
+  .mark {
+    display: block;
+    font-family: var(--font-serif);
+    font-size: 2.4rem;
+    line-height: 0.6;
+    color: var(--accent);
+  }
+  blockquote {
+    margin: 0.6rem 0 0;
+    font-size: 1.02rem;
+    line-height: 1.55;
+    color: var(--ink);
+  }
+  figcaption {
+    margin-top: 1rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--accent-ink);
+  }
+
+  @media (max-width: 900px) {
+    .grid { columns: 2; }
+  }
+  @media (max-width: 600px) {
+    .grid { columns: 1; }
+  }
+</style>

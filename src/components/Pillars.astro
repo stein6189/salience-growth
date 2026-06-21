@@ -1,0 +1,110 @@
+---
+import { getContent } from '../data/site';
+const { lang = 'en' } = Astro.props;
+const { pillars } = getContent(lang);
+---
+
+<section class="section pillars" id="approach-pillars">
+  <div class="container">
+    <div class="head">
+      <p class="eyebrow reveal">{pillars.eyebrow}</p>
+      <h2 class="section-title reveal">{pillars.title}</h2>
+      <p class="lead reveal">{pillars.body}</p>
+    </div>
+
+    <div class="grid">
+      {pillars.items.map((item) => (
+        <article class="pillar reveal">
+          <span class="kicker">{item.kicker}</span>
+          <h3>{item.title}</h3>
+          <p class="desc">{item.body}</p>
+          <ul>
+            {item.bullets.map((b) => (
+              <li>{b}</li>
+            ))}
+          </ul>
+          {item.cta && (
+            <a class="pillar-cta" href={item.cta.href}>
+              {item.cta.label}<span aria-hidden="true">→</span>
+            </a>
+          )}
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .grid {
+    margin-top: clamp(2.5rem, 5vw, 3.5rem);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+  .pillar {
+    position: relative;
+    background: var(--ink);
+    color: var(--paper);
+    border-radius: var(--radius);
+    padding: clamp(1.75rem, 3vw, 2.75rem);
+    overflow: hidden;
+  }
+  .pillar:last-child {
+    background: var(--paper-2);
+    color: var(--ink);
+    border: 1px solid var(--line);
+  }
+  .kicker {
+    font-family: var(--font-serif);
+    font-size: 2.4rem;
+    color: var(--accent);
+    line-height: 1;
+  }
+  .pillar h3 {
+    margin-top: 1rem;
+    font-size: clamp(1.5rem, 2.4vw, 1.9rem);
+  }
+  .pillar:first-child h3 { color: var(--paper); }
+  .desc {
+    margin-top: 0.85rem;
+    opacity: 0.82;
+    max-width: 42ch;
+  }
+  .pillar:last-child .desc { color: var(--muted); opacity: 1; }
+  ul {
+    margin: 1.5rem 0 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 0.7rem;
+  }
+  li {
+    position: relative;
+    padding-left: 1.6rem;
+    font-size: 0.98rem;
+  }
+  li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.55em;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+  .pillar-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    margin-top: 1.5rem;
+    font-weight: 600;
+    font-size: 0.96rem;
+    color: var(--accent-ink);
+    transition: gap 0.2s var(--ease);
+  }
+  .pillar-cta:hover { gap: 0.75rem; }
+  @media (max-width: 860px) {
+    .grid { grid-template-columns: 1fr; }
+  }
+</style>

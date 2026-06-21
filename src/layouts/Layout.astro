@@ -1,0 +1,87 @@
+---
+import '../styles/global.css';
+// Self-hosted fonts (GDPR: no requests to Google Fonts / no IP sent to Google).
+import '@fontsource-variable/inter/index.css';
+import '@fontsource-variable/fraunces/index.css';
+import '@fontsource-variable/fraunces/standard-italic.css';
+import { site, getContent, type Lang } from '../data/site';
+
+interface Props {
+  lang?: Lang;
+  title?: string;
+  description?: string;
+}
+
+const { lang = 'en', title, description } = Astro.props;
+const t = getContent(lang);
+const pageTitle = title ?? t.meta.title;
+const pageDescription = description ?? t.meta.description;
+const canonical = new URL(Astro.url.pathname, Astro.site ?? site.url).href;
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+
+    <title>{pageTitle}</title>
+    <meta name="description" content={pageDescription} />
+    <link rel="canonical" href={canonical} />
+
+    <!-- Language alternates -->
+    <link rel="alternate" hreflang="en" href={new URL('/', site.url).href} />
+    <link rel="alternate" hreflang="de" href={new URL('/de/', site.url).href} />
+    <link rel="alternate" hreflang="x-default" href={new URL('/', site.url).href} />
+
+    <!-- Open Graph / social -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={pageDescription} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:locale" content={lang === 'de' ? 'de_DE' : 'en_US'} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- Fonts are self-hosted via @fontsource (imported in the component script) — no external requests. -->
+
+    <!-- Structured data: organization -->
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'Organization',
+        name: site.name,
+        url: site.url,
+        email: site.email,
+        description: pageDescription,
+      })}
+    />
+  </head>
+  <body>
+    <slot />
+
+    <!-- Lightweight scroll reveal -->
+    <script>
+      const els = document.querySelectorAll('.reveal');
+      if ('IntersectionObserver' in window && els.length) {
+        const io = new IntersectionObserver(
+          (entries) => {
+            for (const e of entries) {
+              if (e.isIntersecting) {
+                e.target.classList.add('in');
+                io.unobserve(e.target);
+              }
+            }
+          },
+          { rootMargin: '0px 0px -10% 0px', threshold: 0.08 }
+        );
+        els.forEach((el) => io.observe(el));
+      } else {
+        els.forEach((el) => el.classList.add('in'));
+      }
+    </script>
+  </body>
+</html>

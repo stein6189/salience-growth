@@ -1,0 +1,9 @@
+# Netlify build configuration — used when the site is connected to this Git repo.
+# On every push, Netlify runs the build and publishes the result.
+
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "20"

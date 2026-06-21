@@ -1,0 +1,164 @@
+---
+import { site, getContent } from '../data/site';
+const { lang = 'en' } = Astro.props;
+const { nav, ui } = getContent(lang);
+const home = Astro.url.pathname === '/' || Astro.url.pathname === '/de/' || Astro.url.pathname === '/de';
+const bookingExternal = site.bookingUrl.startsWith('http');
+const langHome = lang === 'de' ? '/de/' : '/';
+// Anchor links resolve to this language's home when viewed from a sub-page (e.g. /impressum).
+const to = (href: string) => (href.startsWith('#') && !home ? langHome + href : href);
+---
+
+<header class="site-header" id="site-header">
+  <div class="container bar">
+    <a href={to('#top')} class="brand" aria-label={`${site.name} home`}>
+      <span class="mark" aria-hidden="true"></span>
+      <span class="wordmark">Salience<span class="thin"> Growth</span></span>
+    </a>
+
+    <nav class="nav" aria-label="Primary">
+      {nav.map((item) => <a href={to(item.href)}>{item.label}</a>)}
+    </nav>
+
+    <div class="actions">
+      <a class="lang" href={ui.switchHref} title={ui.switchTitle} aria-label={ui.switchTitle}>{ui.switchLabel}</a>
+      <a href={to(site.bookingUrl)} class="btn btn-primary btn-sm" target={bookingExternal ? '_blank' : undefined} rel={bookingExternal ? 'noopener' : undefined}>{ui.bookACall}</a>
+      <button class="menu-toggle" aria-label="Menu" aria-expanded="false" id="menu-toggle">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+
+  <nav class="mobile-nav" id="mobile-nav" aria-label="Mobile">
+    {nav.map((item) => <a href={to(item.href)} class="m-link">{item.label}</a>)}
+    <a href={ui.switchHref} class="m-link lang-m">{ui.switchTitle}</a>
+    <a href={to(site.bookingUrl)} class="btn btn-primary m-cta" target={bookingExternal ? '_blank' : undefined} rel={bookingExternal ? 'noopener' : undefined}>{ui.bookACall}</a>
+  </nav>
+</header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: color-mix(in srgb, var(--paper) 82%, transparent);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.3s var(--ease), background 0.3s var(--ease);
+  }
+  .site-header.scrolled {
+    border-bottom-color: var(--line);
+  }
+  .bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 72px;
+  }
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-weight: 700;
+    font-size: 1.18rem;
+    letter-spacing: -0.02em;
+  }
+  .mark {
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 0 4px var(--accent-soft);
+  }
+  .wordmark .thin { font-weight: 400; color: var(--muted); }
+
+  .nav {
+    display: flex;
+    gap: 1.9rem;
+    font-size: 0.96rem;
+    font-weight: 500;
+  }
+  .nav a { color: var(--muted); transition: color 0.2s var(--ease); }
+  .nav a:hover { color: var(--ink); }
+
+  .actions { display: flex; align-items: center; gap: 0.85rem; }
+  .lang {
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+    padding: 0.35rem 0.55rem;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    transition: color 0.2s var(--ease), border-color 0.2s var(--ease);
+  }
+  .lang:hover { color: var(--ink); border-color: var(--ink); }
+  .btn-sm { padding: 0.6rem 1.1rem; font-size: 0.9rem; }
+
+  .menu-toggle {
+    display: none;
+    flex-direction: column;
+    gap: 4px;
+    width: 40px;
+    height: 40px;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    cursor: pointer;
+  }
+  .menu-toggle span {
+    width: 18px;
+    height: 1.8px;
+    background: var(--ink);
+    transition: transform 0.25s var(--ease), opacity 0.2s var(--ease);
+  }
+
+  .mobile-nav {
+    display: none;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 0.5rem var(--gutter) 1.25rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .mobile-nav.open { display: flex; }
+  .m-link {
+    padding: 0.7rem 0;
+    font-weight: 500;
+    border-bottom: 1px solid var(--line);
+    color: var(--ink);
+  }
+  .lang-m { color: var(--accent-ink); }
+  .m-cta { margin-top: 0.9rem; justify-content: center; }
+
+  @media (max-width: 860px) {
+    .nav { display: none; }
+    .actions .btn-sm { display: none; }
+    .menu-toggle { display: flex; }
+  }
+</style>
+
+<script>
+  const header = document.getElementById('site-header');
+  const toggle = document.getElementById('menu-toggle');
+  const mobileNav = document.getElementById('mobile-nav');
+
+  const onScroll = () => {
+    if (window.scrollY > 8) header?.classList.add('scrolled');
+    else header?.classList.remove('scrolled');
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  toggle?.addEventListener('click', () => {
+    const open = mobileNav?.classList.toggle('open');
+    toggle.setAttribute('aria-expanded', String(!!open));
+  });
+  mobileNav?.querySelectorAll('a').forEach((a) =>
+    a.addEventListener('click', () => {
+      mobileNav.classList.remove('open');
+      toggle?.setAttribute('aria-expanded', 'false');
+    })
+  );
+</script>

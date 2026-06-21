@@ -1,0 +1,77 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { site } from '../data/site';
+---
+
+<Layout
+  lang="de"
+  title="Impressum — Salience Growth"
+  description="Impressum und Anbieterkennzeichnung von Salience Growth."
+>
+  <Header lang="de" />
+  <main>
+    <section class="section">
+      <div class="container">
+        <article class="legal">
+          <a href="/de/" class="back-link">← Zurück zur Startseite</a>
+          <h1>Impressum</h1>
+          <p class="lead">Angaben gemäß § 5 DDG (Digitale-Dienste-Gesetz).</p>
+
+          <h2>Anbieter</h2>
+          <address>
+            Salience Growth – Revenue Growth Beratung<br />
+            Inhaber: Daniel Stein<br />
+            Römerstraße 15a<br />
+            82299 Türkenfeld<br />
+            Deutschland
+          </address>
+
+          <h2>Kontakt</h2>
+          <p>
+            E-Mail: <a href={`mailto:${site.email}`}>{site.email}</a><br />
+            Telefon: +49 173 5970208
+          </p>
+
+          <h2>Rechtsform &amp; Registereintrag</h2>
+          <p>Einzelunternehmen — nicht im Handelsregister eingetragen.</p>
+
+          <h2>Umsatzsteuer-ID</h2>
+          <p>Umsatzsteuer-Identifikationsnummer gemäß § 27a UStG: derzeit nicht vorhanden.</p>
+
+          <h2>Redaktionell verantwortlich</h2>
+          <p>
+            Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV:<br />
+            Daniel Stein, Anschrift wie oben.
+          </p>
+
+          <h2>EU-Streitschlichtung</h2>
+          <p>
+            Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit:
+            <a href="https://ec.europa.eu/consumers/odr/" target="_blank" rel="noopener">https://ec.europa.eu/consumers/odr/</a>.
+            Unsere E-Mail-Adresse finden Sie oben.
+          </p>
+          <p>
+            Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer
+            Verbraucherschlichtungsstelle teilzunehmen.
+          </p>
+
+          <h2>Haftung &amp; Urheberrecht</h2>
+          <p>
+            Die Inhalte dieser Website wurden mit größtmöglicher Sorgfalt erstellt. Für die
+            Richtigkeit, Vollständigkeit und Aktualität der Inhalte wird keine Gewähr übernommen.
+            Für die Inhalte externer Links sind ausschließlich deren Betreiber verantwortlich. Die
+            auf dieser Website veröffentlichten Inhalte unterliegen dem deutschen Urheberrecht.
+          </p>
+
+          <p class="meta">
+            Hinweis: Bitte vor Veröffentlichung rechtlich prüfen lassen. Sobald eine
+            Umsatzsteuer-Identifikationsnummer vorliegt, ist diese hier zu ergänzen.
+          </p>
+        </article>
+      </div>
+    </section>
+  </main>
+  <Footer lang="de" />
+</Layout>

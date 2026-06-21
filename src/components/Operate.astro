@@ -1,0 +1,96 @@
+---
+import { getContent } from '../data/site';
+const { lang = 'en' } = Astro.props;
+const { operate } = getContent(lang);
+---
+
+<section class="section operate" id="operate">
+  <div class="container">
+    <div class="head">
+      <p class="eyebrow reveal">{operate.eyebrow}</p>
+      <h2 class="section-title wide reveal">{operate.title}</h2>
+      <p class="lead reveal">{operate.body}</p>
+    </div>
+
+    <div class="engines">
+      {operate.engines.map((e, i) => (
+        <article class:list={['engine', 'reveal', { dark: i === operate.engines.length - 1 }]} style={`transition-delay:${i * 80}ms`}>
+          <span class="n">{e.n}</span>
+          <h3>{e.title}</h3>
+          <p>{e.body}</p>
+        </article>
+      ))}
+    </div>
+
+    <div class="cta reveal">
+      <p>{operate.cta.lead}</p>
+      <a class="btn btn-primary" href={operate.cta.href}>{operate.cta.label}</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .section-title.wide { max-width: 24ch; }
+
+  .engines {
+    margin-top: clamp(2.5rem, 5vw, 3.5rem);
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.1rem;
+  }
+  .engine {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 1.75rem;
+    display: flex;
+    flex-direction: column;
+  }
+  .engine.dark {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--paper);
+  }
+  .n {
+    font-family: var(--font-serif);
+    font-size: 1.4rem;
+    color: var(--accent-ink);
+    line-height: 1;
+  }
+  .engine.dark .n { color: #ffb98f; }
+  .engine h3 {
+    margin-top: 0.85rem;
+    font-size: 1.3rem;
+    letter-spacing: -0.01em;
+  }
+  .engine.dark h3 { color: var(--paper); }
+  .engine p {
+    margin-top: 0.7rem;
+    color: var(--muted);
+    font-size: 0.97rem;
+  }
+  .engine.dark p { color: rgba(251, 249, 244, 0.78); }
+
+  .cta {
+    margin-top: clamp(2.25rem, 4vw, 3rem);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1.25rem;
+    padding: clamp(1.5rem, 3vw, 2rem);
+    border: 1px solid var(--line);
+    border-left: 4px solid var(--accent);
+    border-radius: var(--radius);
+    background: var(--paper-2);
+  }
+  .cta p {
+    font-size: clamp(1.05rem, 1.7vw, 1.2rem);
+    max-width: 52ch;
+    color: var(--ink);
+  }
+
+  @media (max-width: 860px) {
+    .engines { grid-template-columns: 1fr; }
+  }
+</style>

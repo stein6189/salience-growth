@@ -1,0 +1,123 @@
+---
+import { getContent } from '../data/site';
+const { lang = 'en' } = Astro.props;
+const { method } = getContent(lang);
+---
+
+<section class="section method" id="method">
+  <div class="container">
+    <div class="head">
+      <p class="eyebrow reveal">{method.eyebrow}</p>
+      <h2 class="section-title reveal">{method.title}</h2>
+      <p class="subtitle reveal">{method.subtitle}</p>
+      <p class="lead reveal">{method.intro}</p>
+    </div>
+
+    <ol class="stages">
+      {method.stages.map((s, i) => (
+        <li
+          class:list={['stage', 'reveal', { signal: s.name === 'Salience' }]}
+          style={`transition-delay:${i * 70}ms`}
+        >
+          <span class="n">{s.n}</span>
+          <h3>{s.name}</h3>
+          <p>{s.body}</p>
+        </li>
+      ))}
+    </ol>
+
+    <div class="pull reveal">
+      <span class="pull-stat">{method.pullStat.stat}</span>
+      <span class="pull-label">{method.pullStat.label}</span>
+      <span class="pull-note">{method.pullStat.note}</span>
+    </div>
+  </div>
+</section>
+
+<style>
+  .subtitle {
+    margin-top: 0.85rem;
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: clamp(1.2rem, 2.2vw, 1.6rem);
+    color: var(--ink);
+  }
+
+  .stages {
+    margin: clamp(2.5rem, 5vw, 3.5rem) 0 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.1rem;
+    counter-reset: none;
+  }
+  .stage {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 1.6rem;
+    display: flex;
+    flex-direction: column;
+  }
+  /* The "Salience" stage — the one signal that rises above the rest. */
+  .stage.signal {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--paper);
+    box-shadow: 0 20px 50px -28px rgba(226, 87, 30, 0.55);
+  }
+  .n {
+    font-family: var(--font-serif);
+    font-size: 1.05rem;
+    color: var(--accent-ink);
+    letter-spacing: 0.02em;
+  }
+  .stage.signal .n { color: #ffb98f; }
+  .stage h3 {
+    margin-top: 0.7rem;
+    font-size: 1.28rem;
+    letter-spacing: -0.01em;
+  }
+  .stage.signal h3 { color: var(--paper); }
+  .stage p {
+    margin-top: 0.7rem;
+    color: var(--muted);
+    font-size: 0.96rem;
+  }
+  .stage.signal p { color: rgba(251, 249, 244, 0.78); }
+
+  .pull {
+    margin-top: 1.1rem;
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 0.25rem 1.1rem;
+    padding: 1.5rem 1.75rem;
+    border: 1px solid var(--line);
+    border-left: 4px solid var(--accent);
+    border-radius: var(--radius);
+    background: var(--accent-soft);
+  }
+  .pull-stat {
+    font-family: var(--font-serif);
+    font-size: clamp(2.2rem, 4vw, 3rem);
+    line-height: 1;
+    color: var(--accent-ink);
+  }
+  .pull-label { font-weight: 600; font-size: 1.05rem; }
+  .pull-note {
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--accent-ink);
+  }
+
+  @media (max-width: 900px) {
+    .stages { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 540px) {
+    .stages { grid-template-columns: 1fr; }
+  }
+</style>

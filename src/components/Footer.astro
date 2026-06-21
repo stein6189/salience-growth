@@ -1,0 +1,106 @@
+---
+import { site, getContent } from '../data/site';
+const { lang = 'en' } = Astro.props;
+const { nav, ui } = getContent(lang);
+const year = new Date().getFullYear();
+const bookingExternal = site.bookingUrl.startsWith('http');
+const home = Astro.url.pathname === '/' || Astro.url.pathname === '/de/' || Astro.url.pathname === '/de';
+const langHome = lang === 'de' ? '/de/' : '/';
+const to = (href: string) => (href.startsWith('#') && !home ? langHome + href : href);
+---
+
+<footer class="footer">
+  <div class="container">
+    <div class="top">
+      <div class="brand-col">
+        <a href={to('#top')} class="brand">
+          <span class="mark" aria-hidden="true"></span>
+          <span>Salience<span class="thin"> Growth</span></span>
+        </a>
+        <p class="tagline">{ui.tagline}</p>
+        <p class="loc">{ui.location}</p>
+      </div>
+
+      <div class="links">
+        <h4>{ui.footerNavigate}</h4>
+        {nav.map((item) => <a href={to(item.href)}>{item.label}</a>)}
+        <a href={to('#contact')}>{ui.footerContact}</a>
+      </div>
+
+      <div class="links">
+        <h4>{ui.footerConnect}</h4>
+        <a href={`mailto:${site.email}`}>{site.email}</a>
+        <a href={site.linkedin} target="_blank" rel="noopener">LinkedIn</a>
+        <a href={site.bookingUrl} target={bookingExternal ? '_blank' : undefined} rel={bookingExternal ? 'noopener' : undefined}>{ui.bookACall}</a>
+      </div>
+    </div>
+
+    <div class="bottom">
+      <span>© {year} {site.name}. {ui.footerRights}</span>
+      <span class="legal-links">
+        <a href="/impressum">Impressum</a>
+        <a href="/datenschutz">Datenschutz</a>
+      </span>
+      <span class="domain">{site.domain}</span>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    background: var(--ink);
+    color: rgba(251, 249, 244, 0.72);
+    padding-block: clamp(3rem, 6vw, 4.5rem) 2rem;
+  }
+  .top {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr 1fr;
+    gap: 2.5rem;
+    padding-bottom: 2.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    color: var(--paper);
+    font-weight: 700;
+    font-size: 1.15rem;
+  }
+  .mark {
+    width: 12px; height: 12px; border-radius: 50%;
+    background: var(--accent);
+  }
+  .thin { font-weight: 400; opacity: 0.7; }
+  .tagline { margin-top: 1rem; max-width: 38ch; }
+  .loc { margin-top: 0.75rem; font-size: 0.9rem; opacity: 0.65; }
+
+  .links { display: flex; flex-direction: column; gap: 0.7rem; }
+  .links h4 {
+    color: var(--paper);
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 0.3rem;
+  }
+  .links a { transition: color 0.2s var(--ease); }
+  .links a:hover { color: var(--paper); }
+
+  .bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+    padding-top: 1.5rem;
+    font-size: 0.85rem;
+    opacity: 0.7;
+  }
+  .legal-links { display: flex; gap: 1.25rem; }
+  .legal-links a { transition: color 0.2s var(--ease); }
+  .legal-links a:hover { color: var(--paper); }
+
+  @media (max-width: 720px) {
+    .top { grid-template-columns: 1fr; gap: 2rem; }
+  }
+</style>
