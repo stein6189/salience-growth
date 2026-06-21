@@ -117,7 +117,7 @@ const en = {
     intro:
       'Enterprise buyers put together their shortlist before they take a single sales call. The Salience Growth Method makes you the name already on it. We combine a sharp understanding of how your buyers actually decide with product-management discipline, so your growth runs like a system, not a gamble. Two things most firms keep separate, working together.',
     stages: [
-      { n: '01', name: 'Account Intelligence', body: 'We find where you can be genuinely relevant inside a target account, and when the timing is right for them to listen. You show up with a perspective, never a cold "do you have a need?"' },
+      { n: '01', name: 'Account Intelligence', body: 'We don\'t guess who to chase. We predict it. Our model identifies where you can be genuinely relevant inside a target account and the moment that makes them ready to listen, so you arrive with a point of view, never a cold "do you have a need?"' },
       { n: '02', name: 'Salience', body: 'You become the authority the buyer already knows, present in their world and on their shortlist, before a single sales conversation.' },
       { n: '03', name: 'Trust', body: 'Relationships built through value, not pitches. By the time commercials come up, you are a trusted peer, not another vendor competing on price.' },
       { n: '04', name: 'Conversion', body: 'Expert-led and problem-first. Because the authority and trust were built upstream, the close is the natural conclusion, not a negotiation.' },
@@ -127,11 +127,12 @@ const en = {
   operate: {
     eyebrow: 'Execution',
     title: 'We don’t hand you a strategy. We build the machine.',
-    body: 'Most consultancies leave you with a deck. We put a working acquisition system in place, built around your firm, owned by your team, and still running long after we leave. Three engines do the heavy lifting.',
+    body: 'Most consultancies leave you with a deck. We put a working acquisition system in place, built around your firm, owned by your team, and still running long after we leave. Four engines do the heavy lifting.',
     engines: [
-      { n: '01', title: 'The Sales-Hook Engine', body: 'A library of value-first reasons for a senior buyer to want to engage, each one a give, not an ask, built from how decision-makers actually say yes. Outreach that lands as a compliment, never a cold pitch.' },
-      { n: '02', title: 'The Nurturing Engine', body: 'Relevant, trusted-advisor contact across every account, at scale. The system handles the consistency; your senior people spend their time only where their judgement actually changes the outcome.' },
-      { n: '03', title: 'The Acquisition Backbone', body: 'The operating layer beneath it all: your process, data, content and AI, working as one connected system. We build it, embed it, and hand you the keys.' },
+      { n: '01', title: 'The Fit Engine', body: 'We score accounts before you spend a call on them. A data model reads the signals that actually predict fit: intent, timing, and how the buying decision is structured, then ranks your target list by who is genuinely ready to engage. Your senior people work the few accounts that matter, not the many that don\'t.' },
+      { n: '02', title: 'The Sales-Hook Engine', body: 'A library of value-first reasons for a senior buyer to want to engage, each one a give, not an ask, built from how decision-makers actually say yes. Outreach that lands as a compliment, never a cold pitch.' },
+      { n: '03', title: 'The Nurturing Engine', body: 'Relevant, trusted-advisor contact across every account, at scale. The system handles the consistency; your senior people spend their time only where their judgement actually changes the outcome.' },
+      { n: '04', title: 'The Acquisition Backbone', body: 'The operating layer beneath it all: your process, data, content and AI, working as one connected system. We build it, embed it, and hand you the keys.' },
     ],
     cta: { lead: 'The specifics get tailored to your firm. That is what the engagement is for, not a free download.', label: 'See if it fits your firm', href: '#contact' },
   },
@@ -173,6 +174,15 @@ const en = {
       { stat: '3–5×', label: 'higher meeting rates vs. generic outreach' },
       { stat: '60%', label: 'of decision-makers award work directly off strong thought leadership' },
     ],
+    qualStat: {
+      stat: '[[CONFIRM: XX%]]',
+      label: 'pre-qualification accuracy. Every account your team works is one a senior buyer recognizes as relevant.',
+      note: 'Replace [[CONFIRM: XX%]] with the real figure in src/data/site.ts → results.qualStat.stat',
+    },
+    qualCorroboration: {
+      quote: 'For a fifth of our previous spend, we now get 15× the leads. And thanks to the pre-qualifying, every single one is genuinely relevant to us.',
+      role: 'Partner, IT management consultancy',
+    },
   },
   testimonials: {
     eyebrow: 'Client voices',
@@ -326,7 +336,7 @@ const de: typeof en = {
     intro:
       'Enterprise-Käufer stellen ihre Shortlist zusammen, bevor sie das erste Verkaufsgespräch führen. Die Salience Growth Methode sorgt dafür, dass Sie darauf stehen. Wir verbinden ein genaues Verständnis davon, wie Ihre Käufer wirklich entscheiden, mit Produktmanagement-Disziplin, damit Ihr Wachstum wie ein System läuft, nicht auf gut Glück. Zwei Dinge, die die meisten Unternehmen trennen; bei uns greifen sie ineinander.',
     stages: [
-      { n: '01', name: 'Account Intelligence', body: 'Wir finden, wo Sie in einem Zielkunden wirklich relevant sein können, und wann der richtige Zeitpunkt ist, damit er zuhört. Sie kommen mit einer Haltung, nie mit einem kalten „Haben Sie Bedarf?“.' },
+      { n: '01', name: 'Account Intelligence', body: 'Wir raten nicht, wen wir ansprechen sollen. Wir sagen es vorher. Unser Modell identifiziert, wo Sie in einem Zielkunden wirklich relevant sein können und den Moment, der ihn zum Zuhören bereit macht, damit Sie mit einer klaren Haltung ankommen, nie mit einem kalten „Haben Sie Bedarf?”.' },
       { n: '02', name: 'Salience', body: 'Sie werden zur Autorität, die der Käufer bereits kennt, präsent in seiner Welt und auf seiner Shortlist, noch bevor das erste Gespräch stattfindet.' },
       { n: '03', name: 'Trust', body: 'Beziehungen, die durch echten Mehrwert entstehen, nicht durch Pitches. Wenn es um Konditionen geht, sind Sie bereits ein vertrauter Partner auf Augenhöhe, kein weiterer Anbieter.' },
       { n: '04', name: 'Conversion', body: 'Expertengeführt und problemorientiert. Weil Autorität und Vertrauen vorab aufgebaut wurden, ist der Abschluss die logische Folge, keine Verhandlung.' },
@@ -336,11 +346,12 @@ const de: typeof en = {
   operate: {
     eyebrow: 'Umsetzung',
     title: 'Wir übergeben keine Strategie. Wir bauen die Maschine.',
-    body: 'Die meisten Beratungen lassen Sie mit einem Deck zurück. Wir bauen ein funktionierendes Akquise-System, zugeschnitten auf Ihre Firma, betrieben von Ihrem Team, und noch lange aktiv, nachdem wir fertig sind. Drei Engines tragen die Hauptlast.',
+    body: 'Die meisten Beratungen lassen Sie mit einem Deck zurück. Wir bauen ein funktionierendes Akquise-System, zugeschnitten auf Ihre Firma, betrieben von Ihrem Team, und noch lange aktiv, nachdem wir fertig sind. Vier Engines tragen die Hauptlast.',
     engines: [
-      { n: '01', title: 'The Sales-Hook Engine', body: 'Eine Bibliothek wertorientierter Anlässe, bei denen ein Senior-Käufer von sich aus ins Gespräch kommen will: jeder ein Geben, kein Nehmen, entwickelt daraus, wie Entscheider tatsächlich Ja sagen. Outreach, der wie ein Kompliment ankommt, nie wie ein kalter Pitch.' },
-      { n: '02', title: 'The Nurturing Engine', body: 'Relevante Kontaktpunkte über jeden Account hinweg, skalierbar. Das System sorgt für Konstanz; Ihre Führungskräfte setzen ihre Zeit nur dort ein, wo ihr Urteil das Ergebnis wirklich verändert.' },
-      { n: '03', title: 'The Acquisition Backbone', body: 'Das Fundament darunter: Ihre Prozesse, Daten, Content und KI als ein zusammenhängendes System. Wir bauen es, verankern es und übergeben Ihnen die Schlüssel.' },
+      { n: '01', title: 'The Fit Engine', body: 'Wir bewerten Zielkunden, bevor Sie einen Anruf auf sie verwenden. Ein Datenmodell liest die Signale, die Potenzial tatsächlich vorhersagen: Timing, Kaufstruktur und Absicht, und priorisiert Ihre Liste nach denen, die wirklich gesprächsbereit sind. Ihre Senior-Mitarbeiter konzentrieren sich auf die wenigen Accounts, die zählen, nicht auf die vielen, die es nicht tun.' },
+      { n: '02', title: 'The Sales-Hook Engine', body: 'Eine Bibliothek wertorientierter Anlässe, bei denen ein Senior-Käufer von sich aus ins Gespräch kommen will: jeder ein Geben, kein Nehmen, entwickelt daraus, wie Entscheider tatsächlich Ja sagen. Outreach, der wie ein Kompliment ankommt, nie wie ein kalter Pitch.' },
+      { n: '03', title: 'The Nurturing Engine', body: 'Relevante Kontaktpunkte über jeden Account hinweg, skalierbar. Das System sorgt für Konstanz; Ihre Führungskräfte setzen ihre Zeit nur dort ein, wo ihr Urteil das Ergebnis wirklich verändert.' },
+      { n: '04', title: 'The Acquisition Backbone', body: 'Das Fundament darunter: Ihre Prozesse, Daten, Content und KI als ein zusammenhängendes System. Wir bauen es, verankern es und übergeben Ihnen die Schlüssel.' },
     ],
     cta: { lead: 'Die konkrete Ausgestaltung wird auf Ihre Firma zugeschnitten. Dafür ist das Mandat da, nicht für einen kostenlosen Download.', label: 'Prüfen, ob es zu Ihrer Firma passt', href: '#contact' },
   },
@@ -382,6 +393,15 @@ const de: typeof en = {
       { stat: '3–5×', label: 'höhere Meeting-Raten vs. generischem Outreach' },
       { stat: '60%', label: 'der Entscheider vergeben Aufträge direkt aufgrund starker Thought Leadership' },
     ],
+    qualStat: {
+      stat: '[[CONFIRM: XX%]]',
+      label: 'Vorqualifizierungsgenauigkeit. Jeder Account in Ihrer Pipeline ist einer, den ein Senior-Käufer als relevant einschätzen würde.',
+      note: 'Replace [[CONFIRM: XX%]] with the real figure in src/data/site.ts → results.qualStat.stat',
+    },
+    qualCorroboration: {
+      quote: 'Für ein Fünftel des bisherigen Budgets erhalten wir heute 15-mal so viele Leads, und durch das Pre-Qualifying ist jeder einzelne wirklich relevant für uns.',
+      role: 'Partner, IT-Management-Beratung',
+    },
   },
   testimonials: {
     eyebrow: 'Kundenstimmen',

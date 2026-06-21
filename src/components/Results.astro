@@ -29,6 +29,19 @@ const { results } = getContent(lang);
         ))}
       </div>
     </div>
+
+    <div class="qual reveal">
+      <div class="qual-stat">
+        <span class="stat">{results.qualStat.stat}</span>
+        <span class="label">{results.qualStat.label}</span>
+      </div>
+      <figure class="quote">
+        <blockquote>"{results.qualCorroboration.quote}"</blockquote>
+        <figcaption>
+          <span class="role">{results.qualCorroboration.role}</span>
+        </figcaption>
+      </figure>
+    </div>
   </div>
 </section>
 
@@ -99,8 +112,35 @@ const { results } = getContent(lang);
     font-size: 0.9rem;
   }
 
+  .qual {
+    margin-top: clamp(2.5rem, 5vw, 3.5rem);
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 2.5rem;
+    align-items: start;
+    padding: clamp(1.5rem, 3vw, 2.25rem);
+    border: 1px solid var(--line);
+    border-left: 4px solid var(--accent);
+    border-radius: var(--radius);
+    background: var(--paper-2);
+  }
+  .qual-stat .stat {
+    display: block;
+    font-family: var(--font-serif);
+    font-size: clamp(2.2rem, 4vw, 3rem);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--accent-ink);
+  }
+  .qual-stat .label {
+    display: block;
+    margin-top: 0.5rem;
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+
   .quote {
-    margin: clamp(3rem, 6vw, 5rem) 0 0;
+    margin: 0;
     max-width: 64ch;
   }
   blockquote {
@@ -120,6 +160,7 @@ const { results } = getContent(lang);
 
   @media (max-width: 900px) {
     .metrics { grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+    .qual { grid-template-columns: 1fr; }
   }
   @media (max-width: 480px) {
     .metrics { grid-template-columns: 1fr; }

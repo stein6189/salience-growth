@@ -14,7 +14,7 @@ const { operate } = getContent(lang);
 
     <div class="engines">
       {operate.engines.map((e, i) => (
-        <article class:list={['engine', 'reveal', { dark: i === operate.engines.length - 1 }]} style={`transition-delay:${i * 80}ms`}>
+        <article class:list={['engine', 'reveal', { featured: i === 0 }, { dark: i === operate.engines.length - 1 }]} style={`transition-delay:${i * 80}ms`}>
           <span class="n">{e.n}</span>
           <h3>{e.title}</h3>
           <p>{e.body}</p>
@@ -46,6 +46,19 @@ const { operate } = getContent(lang);
     display: flex;
     flex-direction: column;
   }
+  .engine.featured {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto auto;
+    column-gap: 2rem;
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--paper);
+  }
+  .engine.featured .n { grid-row: 1; grid-column: 1; color: #ffb98f; }
+  .engine.featured h3 { grid-row: 1; grid-column: 2; color: var(--paper); align-self: end; }
+  .engine.featured p { grid-row: 2; grid-column: 2; color: rgba(251,249,244,0.78); }
   .engine.dark {
     background: var(--ink);
     border-color: var(--ink);
@@ -92,5 +105,7 @@ const { operate } = getContent(lang);
 
   @media (max-width: 860px) {
     .engines { grid-template-columns: 1fr; }
+    .engine.featured { grid-template-columns: 1fr; grid-template-rows: auto; }
+    .engine.featured .n, .engine.featured h3, .engine.featured p { grid-column: 1; grid-row: auto; }
   }
 </style>
